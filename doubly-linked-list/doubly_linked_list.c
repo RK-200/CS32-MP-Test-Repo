@@ -10,8 +10,18 @@
 // REMINDER: dont forget to update size
 // REMINDER: dont forget to free()
 
-list *make(int n, int64_t *seq) {
-    
+// O(list size)
+list* make(int n, int64_t *seq) {
+    list* ptr_list = (list*) malloc(sizeof(list));
+    ptr_list->left = NULL;
+    ptr_list->right = NULL;
+    ptr_list->is_reversed = false;
+    ptr_list->size = 0;
+
+    for(int i = 0; i < n; i++) {
+        push_right(ptr_list, seq[i]);
+    }
+    return ptr_list;
 }
 
 // O(1)
@@ -179,20 +189,63 @@ int64_t get(list *l, int i) {
 
     // error if index is bigger than list
     if(l->size <= i) {
-        printf("ERROR: index exceeds list size\n");
+        printf("ERROR: get index exceeds list size\n");
         return -1;
     }
 
-    // iterate through list until specified index
     node* currNode = l->left;
-    for(int counter = 0; counter < i; counter++) {
-        currNode = currNode->next;
+    // regular logic
+    if(!l->is_reversed) {
+        for(int counter = 0; counter < i; counter++) {
+            currNode = currNode->next;
+        }
+    }
+
+    // reversed logic
+    else {
+        i = l->size - i - 1;
+        for(int counter = 0; counter < i; counter++) {
+            currNode = currNode->next;
+        }
     }
     
     return currNode->data;
 }
 
-void set(list *l, int i, int64_t v);
+// O(n)
+void set(list *l, int i, int64_t v) {
+    // error if list is empty
+    if(l->size == 0) {
+        printf("ERROR: cannot set element in empty list\n");
+        return -1;
+    }
+
+    // error if index is bigger than list
+    if(l->size <= i) {
+        printf("ERROR: set index exceeds list size\n");
+        return -1;
+    }
+
+    node* currNode = l->left;
+    // regular logic
+    if(!l->is_reversed) {
+        for(int counter = 0; counter < i; counter++) {
+            currNode = currNode->next;
+        }
+    }
+
+    // reversed logic
+    else {
+        i = l->size - i - 1;
+        for(int counter = 0; counter < i; counter++) {
+            currNode = currNode->next;
+        }
+    }
+    
+    currNode->data = v;
+    
+    return;
+}
 
 // O(1)
 void reverse(list *l) {
