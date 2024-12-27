@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include <inttypes.h>   // for printing  int64_t's
+
 // REMINDER: when adding functionality to the operations, keep in mind na reversed is a thing, most operations would require a regular and reversed implementation to maintain O(1) reversal
 // REMINDER: dont forget to update size
 // REMINDER: dont forget to free()
@@ -88,10 +90,12 @@ void push_right(list *l, int64_t v) {
 
 // O(1)
 bool pop_left(list *l) {
+    // if size is 0, return false
     if(l->size == 0) {
         return false;
     }
     
+    // if size is 1, left and right are set to NULL
     if(l->size == 1) {
         node* to_pop = l->left;
         l->left = NULL;
@@ -101,17 +105,21 @@ bool pop_left(list *l) {
         return true;
     }
 
+    // regular logic
     if(!l->is_reversed) {
         node* to_pop = l->left;
         l->left = l->left->next;
+        l->left->prev = NULL;
         l->size -= 1;
         free(to_pop);
         return true;
     }
 
+    // reversed logic
     if(l->is_reversed) {            //unnecessary conditional but im keeping it for readability
         node* to_pop = l->right;
         l->right = l->right->prev;
+        l->right->next = NULL;
         l->size -= 1;
         free(to_pop);
         return true;
@@ -120,10 +128,12 @@ bool pop_left(list *l) {
 
 // O(1)
 bool pop_right(list *l) {
+    // if size is 0, return false
     if(l->size == 0) {
         return false;
     }
     
+    // if size is 1, left and right are set to NULL
     if(l->size == 1) {
         node* to_pop = l->left;
         l->left = NULL;
@@ -133,17 +143,21 @@ bool pop_right(list *l) {
         return true;
     }
 
+    // reversed logic
     if(l->is_reversed) {
         node* to_pop = l->left;
         l->left = l->left->next;
+        l->left->prev = NULL;
         l->size -= 1;
         free(to_pop);
         return true;
     }
 
+    // regular logic
     if(!l->is_reversed) {            //unnecessary conditional but im keeping it for readability
         node* to_pop = l->right;
         l->right = l->right->prev;
+        l->right->next = NULL;
         l->size -= 1;
         free(to_pop);
         return true;
@@ -250,4 +264,38 @@ void set(list *l, int i, int64_t v) {
 // O(1)
 void reverse(list *l) {
     l->is_reversed = !l->is_reversed;
+}
+
+void print_list(list* l) {
+    printf("size: %d || reversed? %d \ncontains: ", l->size, l->is_reversed);
+    for(int i = 0; i < l->size; i++) {
+        printf("%"PRId64, get(l, i));
+        printf(" ");
+    }
+    printf("\n");
+    return;
+}
+
+int main()
+{
+    int64_t input[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    list* l = make(10, input);
+
+    print_list(l);
+
+    for(int i = 0; i < 5; i++) {    
+        pop_left(l);
+    }
+
+    print_list(l);
+
+    for(int i = 0; i < 5; i++) {    
+        pop_left(l);
+    }
+
+    print_list(l);
+
+    pop_left(l);
+
+    return 0;
 }

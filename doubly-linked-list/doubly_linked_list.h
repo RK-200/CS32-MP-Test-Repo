@@ -11,7 +11,7 @@
 typedef struct list {
     node* left;
     node* right;
-    int64_t size;
+    int size;
     bool is_reversed;
 } list;
 
