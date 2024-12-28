@@ -280,22 +280,57 @@ int main()
 {
     int64_t input[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     list* l = make(10, input);
-
-    print_list(l);
-
-    for(int i = 0; i < 5; i++) {    
-        pop_left(l);
-    }
-
-    print_list(l);
+    // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
     for(int i = 0; i < 5; i++) {    
         pop_left(l);
     }
+    // [5, 6, 7, 8, 9]
 
-    print_list(l);
 
-    pop_left(l);
+    for(int i = 0; i < 5; i++) {    
+        pop_left(l);
+    }
+    // [5, 6, 7, 8, 9]
+
+    for(int i = 10; i < 15; i++) {
+        push_right(l, i);
+    }
+    // [10, 11, 12, 13, 14]
+
+    for(int i = 9; i > 4; i--) {
+        push_left(l, i);
+    }
+    // [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+
+    for(int i = 0; i < 8; i++) {
+        (i % 2 == 0) ? pop_left(l) : pop_right(l);
+    }
+    // [9, 10]
+    int64_t temp;
+    temp = peek_left(l);    // 9
+    temp = peek_right(l);   // 10
+    temp = size(l);         // 2
+    temp = empty(l);        // 0
+
+    for(int i = 99; i < 111; i++) {
+        (i % 2 != 0) ? push_left(l, i) : push_right(l, i);
+    }
+    // [109, 107, 105, 103, 101, 99, 9, 10, 100, 102, 104, 106, 108, 110]
+
+    temp = peek_left(l);    // 109
+    temp = peek_right(l);   // 110
+    temp = size(l);         // 14
+    temp = empty(l);        // 0
+
+    temp = get(l, 9); // 102
+    temp = get(l, 3); // 103
+
+    set(l, 1, 50);          // [109, 50, 105, 103, 101, 99, 9, 10, 100, 102, 104, 106, 108, 110]
+    set(l, 8, 51);          // [109, 102, 105, 103, 101, 99, 9, 10, 51, 102, 104, 106, 108, 110]
+    set(l, 9, 52);          // [109, 102, 105, 103, 101, 99, 9, 10, 51, 52, 104, 106, 108, 110]
+    set(l, 3, 53);          // [109, 102, 105, 53, 101, 99, 9, 10, 51, 102, 104, 106, 108, 110]
+
 
     return 0;
 }
