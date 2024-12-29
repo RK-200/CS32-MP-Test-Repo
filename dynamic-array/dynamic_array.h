@@ -8,7 +8,7 @@
 #include <assert.h>
 
 const int HYSTERESIS_FACTOR = 3;
-const int EXPAND_FACTOR = 2;
+const int RESIZE_FACTOR = 2;
 
 typedef struct list {
     int64_t* data;
@@ -35,14 +35,34 @@ void init_deque(list* d, int capacity) {
 // keeps the same deque but expands the backing array
 void expand_deque(list* d) {
     int64_t* data_copy = d->data;
-    init_deque(d, d->capacity * EXPAND_FACTOR);
+    int old_front = d->front;
+    int old_capacity = d->capacity;
+    init_deque(d, d->capacity * RESIZE_FACTOR);
 
-    // TODO: ADD DATA
-
+    // transfer old data to new deque 
+    // O(n)
+    for(int i = old_front; i < old_front + old_capacity; i++) {
+        push_right(d, data_copy[i % old_capacity]);
+    }
     
 }
 
 //shrink deque
+
+void shrink_deque(list* d) {
+    int64_t* data_copy = d->data;
+    int old_front = d->front;
+    int old_capacity = d->capacity;
+
+    init_deque(d, d->capacity / RESIZE_FACTOR);
+
+    // transfer old data to new deque 
+    // O(n)
+    // WARNIGN: THIS DOESNT WORK KASI BY DEFINITION, NOT ALL OF THESE INDICES ARE OCCUPIED,, FIND ANOTHER WAY
+    for(int i = old_front; i < old_front + old_capacity; i++) {
+        push_right(d, data_copy[i % old_capacity]);
+    }
+}
 
 list *make(int n, int64_t *seq);
 void push_left(list *l, int64_t v);
