@@ -53,13 +53,14 @@ void shrink_deque(list* d) {
     int64_t* data_copy = d->data;
     int old_front = d->front;
     int old_capacity = d->capacity;
+    int old_size = d->occupied_size;
 
     init_deque(d, d->capacity / RESIZE_FACTOR);
 
     // transfer old data to new deque 
     // O(n)
     // WARNIGN: THIS DOESNT WORK KASI BY DEFINITION, NOT ALL OF THESE INDICES ARE OCCUPIED,, FIND ANOTHER WAY
-    for(int i = old_front; i < old_front + old_capacity; i++) {
+    for(int i = old_front; i < old_front + old_size; i++) {
         push_right(d, data_copy[i % old_capacity]);
     }
 }
