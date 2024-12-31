@@ -82,23 +82,26 @@ bool pop_left(list *l) {
         return false;
     }
 
+    if(l->is_reversed) {
+        l->is_reversed = false;
+        pop_right(l);
+        l->is_reversed = true;
+
+    }
+
+    if(!l->is_reversed) {
+        l->data[l->front] = -1;
+        l->front = (l->front + 1) % l->capacity;        // unsure abt this formula
+        l->occupied_size -= 1;
+    }
+
+    // im putting this in the end now so it can properly put the index at i = 0 after a pop,, not that it really matters
     // shrinks when popping from a list that contains less than (as of 2024.12.29) a third of the max capacity
     if(l->occupied_size < l->capacity / HYSTERESIS_FACTOR) {
         shrink_deque(l);
     }
 
-    if(l->is_reversed) {
-        l->is_reversed = false;
-        pop_right(l);
-        l->is_reversed = true;
-        return true;
-    }
-
-    if(!l->is_reversed) {
-        l->front = (l->front + 1) % l->capacity;        // unsure abt this formula
-        l->occupied_size -= 1;
-        return true;
-    }
+    return true;
 }
 
 // once size is less than 1/3 of capacity, the next pop will resize the deque
@@ -107,25 +110,26 @@ bool pop_right(list *l) {
     if(l->occupied_size == 0) {
         return false;
     }
-    
-    // shrinks when popping from a list that contains less than (as of 2024.12.29) a third of the max capacity
-    if(l->occupied_size < l->capacity / HYSTERESIS_FACTOR) {
-        shrink_deque(l);
-    }
 
     if(l->is_reversed) {
         l->is_reversed = false;
         pop_left(l);
         l->is_reversed = true;
-        return true;
     }
 
     if(!l->is_reversed) {
         int back = (l->front + l->occupied_size) % l->capacity - 1;         // the -1 is important since this operation lands the back index to the index to the right of the last occupied index
         l->data[back] = -1;
         l->occupied_size -= 1;
-        return true;
     }
+
+    // im putting this in the end now so it can properly put the index at i = 0 after a pop,, not that it really matters
+    // shrinks when popping from a list that contains less than (as of 2024.12.29) a third of the max capacity
+    if(l->occupied_size < l->capacity / HYSTERESIS_FACTOR) {
+        shrink_deque(l);
+    }
+
+    return true;
 }
 
 // O(1) worst-case
@@ -297,7 +301,34 @@ int main()
     push_right(l, 16);  // [10, 11, 12, 13, 14 ,15, 16, 0, 0, 0]
     temp = get(l, 5);   // 15
     temp = get(l, 6);   // 16
-    temp = get(l, 7);   // should error
-    temp = get(l, 8);   // should error
+    //temp = get(l, 7);   // should error
+    //temp = get(l, 8);   // should error
+
+    pop_right(l);       // [10, 11, 12, 13, 14 ,15, -1, 0, 0, 0]
+    pop_left(l);        // [-1, 11, 12, 13, 14 ,15, -1, 0, 0, 0]
+    pop_left(l);        // [-1, -1, 12, 13, 14 ,15, -1, 0, 0, 0]
+    pop_left(l);        // [-1, -1, -1, 13, 14 ,15, -1, 0, 0, 0]
+    pop_right(l);       // [-1, -1, -1, 13, 14 ,-1, -1, 0, 0, 0]
+    pop_left(l);        // [14, 0, 0, 0, 0]
+    pop_left(l);        // [0, 0]
+    pop_right(l);       // [0, 0]
+    pop_right(l);       // [0, 0]
+
+    push_left(l, 10);   // [0, 10]
+    push_right(l, 11);  // [11, 10]
+    push_left(l, 12);   // [10, 11, 0, 12] note na it doesnt have to be represented as [12, 11, 10, 0] in memory 
+    push_left(l, 13);   // [10, 11, 13, 12]
+    push_left(l, 14);   // [13, 12, 10, 11, 0, 0, 0, 14]
+    push_right(l, 15);  // [13, 12, 10, 11, 15, 0, 0, 14]
+    push_left(l, 16);   // [13, 12, 10, 11, 15, 0, 16, 14]
+    push_right(l, 17);  // [13, 12, 10, 11, 15, 17, 16, 14]
+    push_right(l, 18);  // [16, 14, 13, 12, 10, 11, 15, 17, 18, 0, 0, 0, 0, 0, 0, 0]
+
+    temp = get(l, 0);   // 16
+    temp = get(l, 8);   // 18
+    temp = get(l, 2);   // 13
+    temp = get(l, 6);   // 15
+    temp = get(l, 10);  // should error 
+
     return 0;
 }
