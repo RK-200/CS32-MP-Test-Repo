@@ -10,6 +10,7 @@
 const int HYSTERESIS_FACTOR = 3;
 const int RESIZE_FACTOR = 2;
 
+// there is no variable for back as we can calculate it using occupied_size and front
 typedef struct list {
     int64_t* data;
     int front;
@@ -47,7 +48,7 @@ void expand_deque(list* d) {
     
 }
 
-//shrink deque
+//TODO: MAYBE FREE THE OLD ARRAY???
 
 void shrink_deque(list* d) {
     int64_t* data_copy = d->data;
@@ -59,7 +60,6 @@ void shrink_deque(list* d) {
 
     // transfer old data to new deque 
     // O(n)
-    // WARNIGN: THIS DOESNT WORK KASI BY DEFINITION, NOT ALL OF THESE INDICES ARE OCCUPIED,, FIND ANOTHER WAY
     for(int i = old_front; i < old_front + old_size; i++) {
         push_right(d, data_copy[i % old_capacity]);
     }
