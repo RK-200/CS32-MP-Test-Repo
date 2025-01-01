@@ -9,13 +9,13 @@ typedef struct node{
     struct node* prev;
     struct node* next;
     struct node* below;
-    int level; // stores how many layers this element is in
+    int level; // Stores how many layers this element is in
     int index;
 } node;
 
 node* create_node(int64_t v, int l, int i);
 
-// returns a node with value v
+// Returns a node with default NULL pointers and initialized values
 node* create_node(int64_t v, int l, int i){ 
     node* new_node = (node*) malloc(sizeof(node));
     new_node->val = v;

@@ -8,11 +8,12 @@
 
 #include <assert.h>
 
-const uint32_t SEED = 1000; // fixed seed for testing (can be removed)
-const uint32_t MAX_HEIGHT = 32; // sets maximum number of layers the skip list can reach
-const int P = 2; // probability for element to be added to another layer is 1/P
+const uint32_t SEED = 1000; // Sets a fixed seed (set to 0 to let it be unseeded)
+const uint32_t MAX_HEIGHT = 32; // Maximum number of layers the skip list can reach
+const int P = 2; // Probability for element to be added to another layer is 1/P
 
-int generate_random_level(){ // randomly generates how many layers an element will be in
+// Randomly generates how many layers an element will be in
+int generate_random_level(){ 
     int level = 0;
     while (rand() % P == 0 && level < MAX_HEIGHT - 1){
         level++;
@@ -20,56 +21,62 @@ int generate_random_level(){ // randomly generates how many layers an element wi
     return level;
 }
 
+// Returns how many elements are in the list
 int size(skip_list *l){
     return l->size;
 }
 
+// Returns if the list if empty or not
 bool empty(skip_list *l){
     return (l->size == 0);
 }
 
+// Inserts the input value v to the left of the list with a random number of layers
 void push_left(skip_list *l, int64_t v){
+    // Reversed behavior instead inserts on the right
     if (l->reversed){
         l->reversed = false;
         push_right(l, v);
         l->reversed = true;
         return;
     }
-
-    int level = generate_random_level(); // randomly generate number of layers of this element
+    
+    // Randomly generate number of layers of this element
+    int level = generate_random_level(); 
     int current_level = level;
 
+    // Set new height for the list if this element is now the tallest
     if (level > l->height){
         l->height = level;
     }
 
     int index;
     if (empty(l)){
-        index = 0;
+        index = 0; // Index starts at zero for the first element
     }
     else{
-        index = l->heads[0]->index - 1; // sets index to the next index minus 1
+        index = l->heads[0]->index - 1; // Index is the next index minus 1
     }
 
-    // initialize the new node
+    // Initialize the new node
     node* new_node = create_node(v, level, index);
-    
+    node* node_above = new_node;
     l->size++;
     
-    node* node_above = new_node;
-    
     while (current_level >= 0){
-        // case if node is the first in this layer
+        // Case if node is the first in this layer
         if (l->heads[current_level] == NULL && l->tails[current_level] == NULL){
             l->heads[current_level] = new_node;
             l->tails[current_level] = new_node;
         }
+        // 
         else{
             new_node->next = l->heads[current_level];
             l->heads[current_level]->prev = new_node;
             l->heads[current_level] = new_node;
         }
 
+        // Generate a node below if not in the bottommost layer
         if (current_level > 0){
             new_node = create_node(v, level, index);
             node_above->below = new_node;
@@ -77,9 +84,12 @@ void push_left(skip_list *l, int64_t v){
         }
         current_level--;
     }
+
+    return;
 }
 
 void push_right(skip_list *l, int64_t v){
+    // Reversed behavior instead inserts on the right
     if (l->reversed){
         l->reversed = false;
         push_left(l, v);
@@ -87,21 +97,25 @@ void push_right(skip_list *l, int64_t v){
         return;
     }
 
-    int level = generate_random_level(); // randomly generate number of layers of this element
+    // Randomly generate number of layers of this element
+    int level = generate_random_level(); 
     int current_level = level;
 
+    // Set new height for the list if this element is now the tallest    
     if (level > l->height){
         l->height = level;
     }
+
+
     int index;
     if (empty(l)){
         index = 0;
     }
     else{
-        index = l->tails[0]->index + 1; // sets index to 1 plus the previous index
+        index = l->tails[0]->index + 1; // Index is the previous index plus 1
     }
 
-    // initialize the new node
+    // Initialize the new node
     node* new_node = create_node(v, level, index);
 
     l->size++;
@@ -109,7 +123,7 @@ void push_right(skip_list *l, int64_t v){
     node* node_above = new_node;
 
     while (current_level >= 0){
-        // case if node is the first in this layer
+        // Case if node is the first in this layer
         if (l->heads[current_level] == NULL && l->tails[current_level] == NULL){
             l->heads[current_level] = new_node;
             l->tails[current_level] = new_node;
@@ -120,6 +134,7 @@ void push_right(skip_list *l, int64_t v){
             l->tails[current_level] = new_node;
         }
 
+        // Generate a node below if not in the bottommost layer
         if (current_level > 0){
             new_node = create_node(v, level, index);
             node_above->below = new_node;
@@ -129,6 +144,7 @@ void push_right(skip_list *l, int64_t v){
     }
 }
 
+// Initializes a new skip list from the given input sequence
 skip_list *make(int n, int64_t *seq){
     skip_list* l = (skip_list*) malloc(sizeof(skip_list));
     l->size = 0;
@@ -137,40 +153,49 @@ skip_list *make(int n, int64_t *seq){
     l->tails = calloc(sizeof(node*), MAX_HEIGHT);
     l->reversed = false;
 
-    srand(SEED);
+    // Sets a seed for randomization if SEED is non-zero
+    if (SEED){
+        srand(SEED);
+    }
 
+    // Push each element in seq in order
     for (int i = 0; i < n; i++){
         push_right(l, seq[i]);
     }
     return l;
 }
 
+// Remove the leftmost element from the list; Returns false if the list is empty
 bool pop_left(skip_list *l){
     if (empty(l)){
         return false;
     }
     else{
+        // Pop from the right if list is reversed
         if (l->reversed){
             l->reversed = false;
             bool ret = pop_right(l);
             l->reversed = true;
             return ret;
         }
-
-        node* current = l->heads[l->heads[0]->level]; // start at the topmost node
+        // Start at the topmost node of the leftmost element
+        node* current = l->heads[l->heads[0]->level]; 
         int current_level = current->level;
-       
+
         while (current_level >= 0){
+            // If there is an element to the right
             if (current->next){
                 current->next->prev = NULL;
                 l->heads[current_level] = current->next;
             }
-            else if (current->prev == NULL){ // layer is now empty
+            // Otherwise, this layer will be empty after popping
+            else{ 
                 l->height--;
                 l->heads[current_level] = NULL;
                 l->tails[current_level] = NULL;
             }
             
+            // Move to the node below it
             node* node_below = current->below;
             free(current);
             current = node_below;
@@ -183,11 +208,13 @@ bool pop_left(skip_list *l){
     }
 }
 
+// Remove the rightmost element from the list; Returns false if the list is empty
 bool pop_right(skip_list *l){
     if (empty(l)){
         return false;
     }
     else{
+        // Pop from the right if list is reversed
         if (l->reversed){
             l->reversed = false;
             bool ret = pop_left(l);
@@ -195,33 +222,37 @@ bool pop_right(skip_list *l){
             return ret;
         }
 
-        node* current = l->tails[l->tails[0]->level]; // start at the topmost node
+        node* current = l->tails[l->tails[0]->level]; // Start at the topmost node of the rightmost element
         int current_level = current->level;
 
         while (current_level >= 0){
+            // If there is an element to the right
             if (current->prev){
                 current->prev->next = NULL;
                 l->tails[current_level] = current->prev;
             }
-            else if (current->next == NULL){ // layer is empty after popping
+            // Otherwise, this layer will be empty after popping
+            else{ 
                 l->height--;
                 l->heads[current_level] = NULL;
                 l->tails[current_level] = NULL;
             }
 
+            // Move to the node below it
             node* node_below = current->below;
             free(current);
             current = node_below;
 
             current_level--;
         }
-
         l->size--;
         return true;
     }
 }
 
+// Returns the value of the leftmost element
 int64_t peek_left(skip_list *l){
+    // Instead returns the rightmost value if list is reversed
     if (l->reversed){
         l->reversed = false;
         int64_t ret = peek_right(l);
@@ -231,7 +262,9 @@ int64_t peek_left(skip_list *l){
     return l->heads[0]->val;
 }
 
+// Returns the value of the leftmost element
 int64_t peek_right(skip_list *l){
+    // Instead returns the leftmost value if list is reversed
     if (l->reversed){
         l->reversed = false;
         int64_t ret = peek_left(l);
@@ -243,22 +276,26 @@ int64_t peek_right(skip_list *l){
     }   
 }
 
-node* get_node_at_i(skip_list* l, int i){ // returns node at index i
+// Returns the topmost node of the element at index i
+node* get_node_at_i(skip_list* l, int i){
     if (0 <= i && i < l->size){
         node* current = l->heads[l->height];
 
-        int _i = l->heads[0]->index + i; // adjust index being searched for to stored index
+        int _i = l->heads[0]->index + i; // Adjust index being searched for to stored index
 
+        // Used to prevent looping if index is between two elements in the same layer
         bool left_checked = false;
         bool right_checked = false;
 
         while (_i != current->index){
-            if (_i < current->index){ // element must be to its left
-                if (current->prev){ // move to the left element, if it exists
+            // Element must be to its left
+            if (_i < current->index){ 
+                if (current->prev){ // Move to the left element, if it exists
                     current = current->prev;
                     left_checked = true;
                 }
-                else{ // if there is no element to its left, keep going down layers until there is
+                // If there is no element to the right, go down a layer
+                else{ 
                     while(current->prev == NULL){
                         current = current->below;
                         left_checked = false;
@@ -266,12 +303,15 @@ node* get_node_at_i(skip_list* l, int i){ // returns node at index i
                     }
                 }
             }
-            else if (_i > current->index){ // otherwise, it must be to the right
-                if (current->next){ // move to the right element, if it exists
+            // Otherwise, it must be to the right
+            else if (_i > current->index){ 
+                // Move to the right element, if it exists
+                if (current->next){ 
                     current = current->next;
                     right_checked = true;
                 }
-                else{ // if there is no element to the right, go down a layer
+                // If there is no element to the right, go down a layer
+                else{ 
                     while(current->next == NULL){
                         current = current->below;
                         left_checked = false;
@@ -279,7 +319,8 @@ node* get_node_at_i(skip_list* l, int i){ // returns node at index i
                     }
                 }
             }
-            if (right_checked && left_checked){ // element is not in this layer, go down
+            // Element is not in this layer, go down
+            if (right_checked && left_checked){ 
                 current = current->below;
                 left_checked = false;
                 right_checked = false;
@@ -287,40 +328,63 @@ node* get_node_at_i(skip_list* l, int i){ // returns node at index i
         }
         return current;
     }
-
-    printf("ERROR: index is out of bounds!");
+    
     return NULL;
 }
 
+// Returns the value of the node at index i
 int64_t get(skip_list *l, int i){
+    node* node_at_i;
     if (l->reversed){
-        return get_node_at_i(l, l->size - i - 1)->val;
+        // Index counting starts from the right if list is reversed
+        node_at_i = get_node_at_i(l, l->size - i - 1)->val;
     }
     else{
-        return get_node_at_i(l, i)->val;
+        node_at_i = get_node_at_i(l, i)->val;
+    }
+    if (node_at_i){
+        return node_at_i->val;
+    }
+    else{
+        printf("ERROR: index is out of bounds!");
+        return -1;
     }
 }
 
+// Sets the value of all nodes at index i to v
 void set(skip_list *l, int i, int64_t v){
-    node* current = NULL;
+    node* node_at_i = NULL;
     if (l->reversed){
-        current = get_node_at_i(l, l->size - i - 1);
+        node_at_i = get_node_at_i(l, l->size - i - 1);
     }
     else{
-        current = get_node_at_i(l, i);
+        node_at_i = get_node_at_i(l, i);
     }
-    while (current){ // change node values starting from the top
-        current->val = v;
-        current = current->below;
+
+    if (node_at_i){
+        while (node_at_i){ // Change node values starting from the top
+            node_at_i->val = v;
+            node_at_i = node_at_i->below;
+        }
+        return;
+    }
+    else{
+        printf("ERROR: index is out of bounds!");
+        return;
     }
 }
 
+// Reverses the list
 void reverse(skip_list *l){
     l->reversed = !l->reversed;
 }
 
-//for debugging (doesn't print in reversed btw)
+// For debugging (doesn't print in reversed btw)
 void print_list(skip_list* l){
+    if (empty(l)){
+        printf("list is empty\n");
+        return;
+    }
     printf("list: \n");
 
     for (int i = l->height; i >= 0; i--){
@@ -344,7 +408,7 @@ void print_list(skip_list* l){
     printf("\n \n");
 }
 
-// temporary testing code
+// Temporary testing code
 int main(void){
     int n = 64;
     int64_t* arr = (int64_t*) malloc(sizeof(int64_t) * n);
@@ -427,4 +491,14 @@ int main(void){
 
     reverse(l);
     assert(peek_left(l) == 10);
+    assert(size(l) == 16);
+    assert(!empty(l));
+    
+    for (int i = 0; i < 16; i++){
+        assert(pop_left(l));
+    }
+
+    assert(empty(l));
+    assert(size(l) == 0);
+    print_list(l);
 }
