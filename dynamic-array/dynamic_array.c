@@ -14,7 +14,7 @@ list *make(int n, int64_t *seq) {
     list* d = (list*) malloc(sizeof(list));
     assert(d != 0);
 
-    init_deque(d, n * 2);
+    init_deque(d, n * 2, false);
 
     // no need to use push right since were copying from a "true" 0-indexed array instead of a deque
     for(int i = 0; i < n; i++) {
