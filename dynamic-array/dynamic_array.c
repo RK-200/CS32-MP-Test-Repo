@@ -191,7 +191,8 @@ int64_t get(list *l, int i) {
         index = (l->front + i) % l->capacity;
 
         // OOB check UNSURE
-        if(index + 1 > (l->front + l->occupied_size) % l->capacity) {
+        // if index is greater than rear index and list is not full
+        if(index + 1 > (l->front + l->occupied_size) % l->capacity && l->occupied_size != l->capacity) {
             printf("get index is out of bounds");
             assert(0 != 0);
             return -1;
@@ -205,7 +206,8 @@ int64_t get(list *l, int i) {
         index = (l->front + l->occupied_size - 1 - i) % l->capacity;        //unsure abt this formula
         
         // OOB check UNSURE
-        if(index < l->front) {
+        // if index is less than the front index and list is not full
+        if(index < l->front && l->occupied_size != l->capacity) {
             printf("get index is out of bounds");
             assert(0 != 0);
             return -1;
@@ -224,7 +226,8 @@ void set(list *l, int i, int64_t v) {
         index = (l->front + i) % l->capacity;
         
         // CHECK FOR OOB
-        if(index + 1 > (l->front + l->occupied_size) % l->capacity) {
+        // if index is greater than rear index and list is not full
+        if(index + 1 > (l->front + l->occupied_size) % l->capacity && l->occupied_size != l->capacity) {
             printf("set index is out of bounds");
             assert(0 != 0);
             return -1;
@@ -239,7 +242,8 @@ void set(list *l, int i, int64_t v) {
         index = (l->front + l->occupied_size - 1 - i) % l->capacity;        //unsure abt this formula
         
         // OOB check UNSURE
-        if(index < l->front) {
+        // if index is less than the front index and list is not full
+        if(index < l->front && l->occupied_size != l->capacity) {
             printf("set index is out of bounds");
             assert(0 != 0);
             return -1;
@@ -328,7 +332,31 @@ int main()
     temp = get(l, 8);   // 18
     temp = get(l, 2);   // 13
     temp = get(l, 6);   // 15
-    temp = get(l, 10);  // should error 
+    //temp = get(l, 10);  // should error 
+
+    push_left(l, 19);   // [16, 14, 13, 12, 10, 11, 15, 17, 18, 0, 0, 0, 0, 0, 0, 19]
+    push_left(l, 20);   // [16, 14, 13, 12, 10, 11, 15, 17, 18, 0, 0, 0, 0, 0, 20, 19]
+    push_left(l, 21);   // [16, 14, 13, 12, 10, 11, 15, 17, 18, 0, 0, 0, 0, 21, 20, 19] index 13 front
+    reverse(l);         // [16, 14, 13, 12, 10, 11, 15, 17, 18, 0, 0, 0, 0, 21, 20, 19] is_reversed = true
+    push_left(l, 22);   // [16, 14, 13, 12, 10, 11, 15, 17, 18, 22, 0, 0, 0, 21, 20, 19] 
+    push_left(l, 23);   // [16, 14, 13, 12, 10, 11, 15, 17, 18, 22, 23, 0, 0, 21, 20, 19]
+    push_right(l, 24);  // [16, 14, 13, 12, 10, 11, 15, 17, 18, 22, 23, 0, 24, 21, 20, 19]  index 12 front
+    push_right(l, 25);  // [16, 14, 13, 12, 10, 11, 15, 17, 18, 22, 23, 25, 24, 21, 20, 19] index 11 front (25) but its reversed so 25 is technically the back
+    temp = get(l, 15);  // 25
+    temp = get(l, 0);   // 23
+    temp = get(l, 1);   // 22
+
+    for(int i = 0; i < size(l); i++) {          
+        set(l, i, i);                   // [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11]
+    }
+
+    reverse(l);
+
+    for(int i = 0; i < size(l); i++) {
+        set(l, i, i);                   // [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 1, 2, 3, 4]
+    }
+
+    
 
     return 0;
 }
