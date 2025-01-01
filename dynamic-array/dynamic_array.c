@@ -6,17 +6,16 @@
 #include <stdbool.h>
 #include <assert.h>
 
-// O(len(seq)) worst-case
+/* Initializes a dynamic list with a dynamic array backing. Note that the initial capacity of the backing array is twice the number of input elements
+O(len(seq)) worst-case */
 list *make(int n, int64_t *seq) {
-    // allocates d in the heap then initializes its values using init_deque() and the for loop
-    // note that the initial capacity of the backing array is twice the number of input elements
-
+    // The list is allocated here but its members are given their values using init_deque()
     list* d = (list*) malloc(sizeof(list));
     assert(d != 0);
 
     init_deque(d, n * 2, false);
 
-    // no need to use push right since were copying from a "true" 0-indexed array instead of a deque
+    // No need to use push right since we're copying from a "true" 0-indexed array instead of a deque (meaning the indices are the same)
     for(int i = 0; i < n; i++) {
         d->data[i] = seq[i];
         d->occupied_size += 1;
@@ -24,13 +23,15 @@ list *make(int n, int64_t *seq) {
     return d;
 }
 
-// O(1) amortized
+/* Inserts the value v to the left, so that it becomes the leftmost value. 
+O(1) amortized */
 void push_left(list *l, int64_t v) {
-    // expands the deque when we push to a full backing array
+    // Expands the deque when we push to a full backing array
     if(l->occupied_size == l->capacity) {
         expand_deque(l);
     }
 
+    // Reversed logic uses the non-reversed implementation of push_right()
     if(l->is_reversed) {
         l->is_reversed = false;
         push_right(l, v);
@@ -38,7 +39,7 @@ void push_left(list *l, int64_t v) {
         return;
     }
 
-    // non-reversed logic moves the index one space to the left and inserts v at that index
+    // Non-reversed logic moves the front index one space to the left and inserts v at that index
     if(!l->is_reversed) {
         l->front -= 1;  
 
@@ -52,13 +53,15 @@ void push_left(list *l, int64_t v) {
     }
 }
 
-// O(1) amortized
+/* Inserts the value v to the right, so that it becomes the rightmost value. 
+O(1) amortized */
 void push_right(list *l, int64_t v) {
-    // expands the deque when we push to a full backing array
+    // Expands the deque when we push to a full backing array
     if(l->occupied_size == l->capacity) {
         expand_deque(l);
     }
 
+    // Reversed logic uses the non-reversed implementation of push_left()
     if(l->is_reversed) {
         l->is_reversed = false;
         push_left(l, v);
@@ -66,8 +69,8 @@ void push_right(list *l, int64_t v) {
         return;
     }
 
-    // non-reversed logic simply puts the new value at the calculated back index then increments occupied size
-    // note that back does not need to be set as our list does not have a back variable
+    // Non-reversed logic simply puts the new value at the calculated back index then increments occupied size
+    // Note that back does not need to be set as our list does not have a back variable
     if(!l->is_reversed) {
         int back = (l->front + l->occupied_size) % l->capacity;
         l->data[back] = v;
@@ -76,27 +79,28 @@ void push_right(list *l, int64_t v) {
     }
 }
 
-// O(1) amortized
+/*  Sets the value at the leftmost index to -1 then removes it from the list. Returns whether the operation was successful or not. 
+O(1) amortized */
 bool pop_left(list *l) {
     if(l->occupied_size == 0) {
         return false;
     }
 
+    // Reversed logic uses the non-reversed implementation of pop_right()
     if(l->is_reversed) {
         l->is_reversed = false;
         pop_right(l);
         l->is_reversed = true;
-
     }
 
+    // Non-reversed logic sets the value at the popped index to -1 and increments the front index to remove the previous element from the list
     if(!l->is_reversed) {
         l->data[l->front] = -1;
-        l->front = (l->front + 1) % l->capacity;        // unsure abt this formula
+        l->front = (l->front + 1) % l->capacity;        
         l->occupied_size -= 1;
     }
 
-    // im putting this in the end now so it can properly put the index at i = 0 after a pop,, not that it really matters
-    // shrinks when popping from a list that contains less than (as of 2024.12.29) a third of the max capacity
+    // Shrinks when popping from a list that contains less than a third of the max capacity
     if(l->occupied_size < l->capacity / HYSTERESIS_FACTOR) {
         shrink_deque(l);
     }
@@ -104,27 +108,28 @@ bool pop_left(list *l) {
     return true;
 }
 
-// once size is less than 1/3 of capacity, the next pop will resize the deque
-// O(1) amortized
+/*  Sets the value at the rightmost index to -1 then removes it from the list. Returns whether the operation was successful or not. 
+O(1) amortized */
 bool pop_right(list *l) {
     if(l->occupied_size == 0) {
         return false;
     }
 
+    // Reversed logic uses the non-reversed implementation of pop_left()
     if(l->is_reversed) {
         l->is_reversed = false;
         pop_left(l);
         l->is_reversed = true;
     }
 
+    // Non-reversed logic sets the value at the popped index to -1 and decrements the size of the list to implicitly remove the element (since back is calculated from size)
     if(!l->is_reversed) {
-        int back = (l->front + l->occupied_size) % l->capacity - 1;         // the -1 is important since this operation lands the back index to the index to the right of the last occupied index
+        int back = (l->front + l->occupied_size) % l->capacity - 1; // the -1 is important since this calculation lands the back index to the index to the right of the last occupied index
         l->data[back] = -1;
         l->occupied_size -= 1;
     }
 
-    // im putting this in the end now so it can properly put the index at i = 0 after a pop,, not that it really matters
-    // shrinks when popping from a list that contains less than (as of 2024.12.29) a third of the max capacity
+    // Shrinks when popping from a list that contains less than a third of the max capacity
     if(l->occupied_size < l->capacity / HYSTERESIS_FACTOR) {
         shrink_deque(l);
     }
@@ -132,7 +137,8 @@ bool pop_right(list *l) {
     return true;
 }
 
-// O(1) worst-case
+/*  Returns the value at the leftmost index. Prints an error message, fails an assertion, and returns -1 if there is no leftmost element. 
+O(1) worst-case*/
 int64_t peek_left(list *l) {
     if(l->occupied_size == 0) {
         printf("ERROR: cannot peek from list of size 0");
@@ -140,6 +146,7 @@ int64_t peek_left(list *l) {
         return -1;
     }
 
+    // Reversed logic uses the non-reversed implementation of peek_right()
     if(l->is_reversed) {
         l->is_reversed = false;
         int64_t ret = peek_right(l);
@@ -152,7 +159,8 @@ int64_t peek_left(list *l) {
     }
 }
 
-// O(1) worst-case
+/*  Returns the value at the rightmost index. Prints an error message, fails an assertion, and returns -1 if there is no rightmost element. 
+O(1) worst-case*/
 int64_t peek_right(list *l) {
     if(l->occupied_size == 0) {
         printf("ERROR: cannot peek from list of size 0");
@@ -160,6 +168,7 @@ int64_t peek_right(list *l) {
         return -1;
     }
     
+    // Reversed logic uses the non-reversed implementation of peek_left()
     if(l->is_reversed) {
         l->is_reversed = false;
         int64_t ret = peek_left(l);
@@ -173,25 +182,28 @@ int64_t peek_right(list *l) {
     }
 }
 
-// O(1) worst-case
+/* Returns the number of elements currently in the list. 
+O(1) worst-case */
 int size(list *l) {
     return l->occupied_size;
 }
 
-// O(1) worst-case
+/* Returns whether the list is currently empty or not. 
+O(1) worst-case */
 bool empty(list *l) {
     return (l->occupied_size == 0) ? true : false;
 }
 
-// O(1) worst-case
+/* Returns the element at index i provided that 0 <= i < occupied_size. If i is out of bounds, prints an error, fails an assertion, and returns -1.
+O(1) worst-case */
 int64_t get(list *l, int i) {
     int index; 
 
     if(!l->is_reversed) {
         index = (l->front + i) % l->capacity;
 
-        // OOB check UNSURE
-        // if index is greater than rear index and list is not full
+        // OOB check
+        // "if index is greater than rear index and list is not full"
         if(index + 1 > (l->front + l->occupied_size) % l->capacity && l->occupied_size != l->capacity) {
             printf("get index is out of bounds");
             assert(0 != 0);
@@ -203,10 +215,10 @@ int64_t get(list *l, int i) {
     }
 
     if(l->is_reversed) {
-        index = (l->front + l->occupied_size - 1 - i) % l->capacity;        //unsure abt this formula
+        index = (l->front + l->occupied_size - 1 - i) % l->capacity;       
         
-        // OOB check UNSURE
-        // if index is less than the front index and list is not full
+        // OOB check
+        // "if index is less than the front index and list is not full"
         if(index < l->front && l->occupied_size != l->capacity) {
             printf("get index is out of bounds");
             assert(0 != 0);
@@ -218,19 +230,20 @@ int64_t get(list *l, int i) {
     }
 }
 
-// O(1) worst-case
+/* Sets the element at index i to v provided that 0 <= i < occupied_size. If i is out of bounds, prints an error, fails an assertion, and does nothing.
+O(1) worst-case */
 void set(list *l, int i, int64_t v) {
     int index;
 
     if(!l->is_reversed) {
         index = (l->front + i) % l->capacity;
         
-        // CHECK FOR OOB
+        // OOB check
         // if index is greater than rear index and list is not full
         if(index + 1 > (l->front + l->occupied_size) % l->capacity && l->occupied_size != l->capacity) {
             printf("set index is out of bounds");
             assert(0 != 0);
-            return -1;
+            return;
         }
 
         // if in bounds
@@ -239,14 +252,14 @@ void set(list *l, int i, int64_t v) {
     }
 
     if(l->is_reversed) {
-        index = (l->front + l->occupied_size - 1 - i) % l->capacity;        //unsure abt this formula
+        index = (l->front + l->occupied_size - 1 - i) % l->capacity;
         
-        // OOB check UNSURE
+        // OOB check
         // if index is less than the front index and list is not full
         if(index < l->front && l->occupied_size != l->capacity) {
             printf("set index is out of bounds");
             assert(0 != 0);
-            return -1;
+            return;
         }
 
         // if in bounds
@@ -255,7 +268,8 @@ void set(list *l, int i, int64_t v) {
     }
 }
 
-// O(1) worst-case
+/* Reverses the list. 
+O(1) worst-case */
 void reverse(list *l) {
     l->is_reversed = !l->is_reversed;
     return;

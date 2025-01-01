@@ -7,10 +7,19 @@
 #include <stdbool.h>
 #include <assert.h>
 
+/* This const exists to provide stability to the resizing system. 
+While a deque of capacity 5 doubles in capacity once it needs to contain 6 elements, 
+it should not halve its capacity when its size falls back to 5 since another push would cause it to expand again (inefficient).
+Instead, the deque halves in size once the contents go below 1/HYSTERESIS_FACTOR.*/
 const int HYSTERESIS_FACTOR = 3;
+
+// Scales the capacity of the deque by this const when resized
 const int RESIZE_FACTOR = 2;
 
-// there is no variable for back as we can calculate it using occupied_size and front
+
+
+/* Only the essential variables are kept in this struct.
+Note that there is no variable for back as we can calculate it using occupied_size and front*/
 typedef struct list {
     int64_t* data;
     int front;
@@ -19,12 +28,20 @@ typedef struct list {
     bool is_reversed;
 } list;
 
+/* Initializes the contents of a list (allocation of the list itself is done in the make() function).
+This function is called during deque resizes.
+The is_reversed parameter is needed to maintain the list's state between resizes*/
 void init_deque(list* d, int capacity, bool is_reversed) {
+    if(capacity <= 0) {
+        printf("ERROR: cannot initialize deque with 0 capacity");
+        assert(0 != 0);
+        return;
+    }
+
+    // reset values
     d->front = 0;
     d->occupied_size = 0;
-    d->is_reversed = false;                 // BIG NOTE: THIS MIGHT NEED TO RETAIN THE REVERSED STATUS OF THE DEQUE THAT CAME BEFORE IT,, HTINK ABT IT
-
-    assert(capacity > 0);
+    d->is_reversed = is_reversed; 
     d->capacity = capacity;
     
     d->data = (int64_t*) malloc(sizeof(int64_t) * capacity);
@@ -33,7 +50,7 @@ void init_deque(list* d, int capacity, bool is_reversed) {
     return;
 } 
 
-// keeps the same deque but expands the backing array
+// Keeps the same list but expands the backing array
 void expand_deque(list* d) {
     int64_t* data_copy = d->data;
     int old_front = d->front;
@@ -49,11 +66,9 @@ void expand_deque(list* d) {
     }
     
     free(data_copy);
-
 }
 
-//TODO: MAYBE FREE THE OLD ARRAY???
-
+// Keeps the same list but expands the backing array
 void shrink_deque(list* d) {
     int64_t* data_copy = d->data;
     int old_front = d->front;
@@ -68,7 +83,6 @@ void shrink_deque(list* d) {
     for(int i = old_front; i < old_front + old_size; i++) {
         push_right(d, data_copy[i % old_capacity]);
     }
-    
     free(data_copy);
 }
 
