@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+// This struct is the doubly linked list that functions as a dynamic list using the functions below.
 typedef struct list {
     node* left;
     node* right;

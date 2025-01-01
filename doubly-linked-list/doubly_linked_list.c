@@ -6,13 +6,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <inttypes.h>   // for printing  int64_t's
-
-// REMINDER: when adding functionality to the operations, keep in mind na reversed is a thing, most operations would require a regular and reversed implementation to maintain O(1) reversal
-// REMINDER: dont forget to update size
-// REMINDER: dont forget to free()
-
-// O(list size)
+/* Initializes a dynamic list with a doubly linked list backing.
+O(len(seq)) worst-case */
 list* make(int n, int64_t *seq) {
     list* ptr_list = (list*) malloc(sizeof(list));
     ptr_list->left = NULL;
@@ -26,9 +21,10 @@ list* make(int n, int64_t *seq) {
     return ptr_list;
 }
 
-// O(1)
+/* Inserts the value v to the left, so that it becomes the leftmost value. 
+O(1) worst-case */
 void push_left(list *l, int64_t v) {
-    //empty behaviour
+    // Special handling for an empty list
     if(l->size == 0) {
         node* new_node = createNode(v);
         l->left = new_node;
@@ -37,7 +33,7 @@ void push_left(list *l, int64_t v) {
         return;
     }
 
-    //not reversed behaviour
+    // Non-reversed behaviour creates a new node, sets it as the left to the current leftmost node, then sets it as the new leftmost node
     if(!l->is_reversed) {
         node* new_node = createNode(v);
         new_node->next = l->left;
@@ -46,20 +42,20 @@ void push_left(list *l, int64_t v) {
         l->size += 1;
         return;
     }
-    //reversed behaviour
+
+    // Reversed logic uses the non-reversed implementation of push_right()
     if(l->is_reversed) {
-        node* new_node = createNode(v);
-        new_node->prev = l->right;
-        l->right->next = new_node;
-        l->right = new_node;
-        l->size += 1;
+        l->is_reversed = false;
+        push_right(l, v);
+        l->is_reversed = true;
         return;
     }
 }
 
-// O(1)
+/* Inserts the value v to the right, so that it becomes the rightmost value. 
+O(1) worst-case */
 void push_right(list *l, int64_t v) {
-    //empty behaviour
+    // Special handling for an empty list
     if(l->size == 0) {
         node* new_node = createNode(v);
         l->left = new_node;
@@ -68,16 +64,15 @@ void push_right(list *l, int64_t v) {
         return;
     }
 
-    //reversed behaviour
+    // Reversed logic uses the non-reversed implementation of push_left()
     if(l->is_reversed) {
-        node* new_node = createNode(v);
-        new_node->next = l->left;
-        l->left->prev = new_node;
-        l->left = new_node;
-        l->size += 1;
+        l->is_reversed = false;
+        push_left(l, v);
+        l->is_reversed = true;
         return;
     }
-    //not reversed behaviour
+    
+    // Non-reversed behaviour creates a new node, sets it as the right to the current rightmost node, then sets it as the new rightmost node
     if(!l->is_reversed) {
         node* new_node = createNode(v);
         new_node->prev = l->right;
@@ -88,14 +83,16 @@ void push_right(list *l, int64_t v) {
     }
 }
 
-// O(1)
+/* Sets the new leftmost node as the node to the right of the old leftmost then frees the old leftmost node. Has a special case for a list of size 1.
+Returns whether the operation was successful or not. 
+O(1) worst-case */
 bool pop_left(list *l) {
-    // if size is 0, return false
+    // If size is 0, return false
     if(l->size == 0) {
         return false;
     }
     
-    // if size is 1, left and right are set to NULL
+    // If size is 1, left and right are set to NULL
     if(l->size == 1) {
         node* to_pop = l->left;
         l->left = NULL;
@@ -105,7 +102,7 @@ bool pop_left(list *l) {
         return true;
     }
 
-    // regular logic
+    // Non-reversed logic
     if(!l->is_reversed) {
         node* to_pop = l->left;
         l->left = l->left->next;
@@ -115,25 +112,24 @@ bool pop_left(list *l) {
         return true;
     }
 
-    // reversed logic
-    if(l->is_reversed) {            //unnecessary conditional but im keeping it for readability
-        node* to_pop = l->right;
-        l->right = l->right->prev;
-        l->right->next = NULL;
-        l->size -= 1;
-        free(to_pop);
-        return true;
+    // Reversed logic uses the non-reversed implementation of pop_right()
+    if(l->is_reversed) {            
+        l->is_reversed = false;
+        pop_right(l);
+        l->is_reversed = true;
     }
 }
 
-// O(1)
+/* Sets the new rightmost node as the node to the left of the old rightmost then frees the old rightmost node. Has a special case for a list of size 1.
+Returns whether the operation was successful or not. 
+O(1) worst-case */
 bool pop_right(list *l) {
-    // if size is 0, return false
+    // If size is 0, return false
     if(l->size == 0) {
         return false;
     }
     
-    // if size is 1, left and right are set to NULL
+    // If size is 1, left and right are set to NULL
     if(l->size == 1) {
         node* to_pop = l->left;
         l->left = NULL;
@@ -143,18 +139,16 @@ bool pop_right(list *l) {
         return true;
     }
 
-    // reversed logic
+    // Reversed logic uses the non-reversed implementation of pop_left()
     if(l->is_reversed) {
-        node* to_pop = l->left;
-        l->left = l->left->next;
-        l->left->prev = NULL;
-        l->size -= 1;
-        free(to_pop);
+        l->is_reversed = false;
+        pop_left(l);
+        l->is_reversed = true;
         return true;
     }
 
     // regular logic
-    if(!l->is_reversed) {            //unnecessary conditional but im keeping it for readability
+    if(!l->is_reversed) {    
         node* to_pop = l->right;
         l->right = l->right->prev;
         l->right->next = NULL;
@@ -164,58 +158,68 @@ bool pop_right(list *l) {
     }
 }
 
-// O(1)
+/*  Returns the value at the leftmost index. Prints an error message, fails an assertion, and returns -1 if there is no leftmost element. 
+O(1) worst-case*/
 int64_t peek_left(list *l) {
     if(l->size == 0) {
         printf("ERROR: cannot peek from empty list");
+        assert(0 != 0);
         return -1;
     }
     return (l->is_reversed) ? l->right->data : l->left->data;
 }
 
-// O(1)
+/* Returns the value at the rightmost index. Prints an error message, fails an assertion, and returns -1 if there is no rightmost element. 
+O(1) worst-case*/
 int64_t peek_right(list *l) {
     if(l->size == 0) {
         printf("ERROR: cannot peek from empty list");
+        assert(0 != 0);
         return -1;
     }
     return (l->is_reversed) ? l->left->data : l->right->data;
 }
 
-// O(1)
+/* Returns the number of elements currently in the list. 
+O(1) worst-case */
 int size(list *l) {
     return l->size;
 }
 
-// O(1)
+/* Returns whether the list is currently empty or not. 
+O(1) worst-case */
 bool empty(list *l) {
     return (l->size == 0) ? true : false;
 }
 
 
-// O(n) worst case
+/* Returns the element at index i provided that 0 <= i < occupied_size. If i is out of bounds, prints an error, fails an assertion, and returns -1.
+O(n) worst-case */
 int64_t get(list *l, int i) {
-    // error if list is empty
+    // Error if list is empty
     if(l->size == 0) {
         printf("ERROR: cannot get element from empty list\n");
+        assert(0 != 0);
         return -1;
     }
 
-    // error if index is bigger than list
+    // Error if index is bigger than list
     if(l->size <= i) {
         printf("ERROR: get index exceeds list size\n");
+        assert(0 != 0);
         return -1;
     }
 
     node* currNode = l->left;
-    // regular logic
+
+    // Regular logic increments i times from the left
     if(!l->is_reversed) {
         for(int counter = 0; counter < i; counter++) {
             currNode = currNode->next;
         }
     }
 
-    // reversed logic
+    // Reversed logic increments size - i - 1 times from the left
     else {
         i = l->size - i - 1;
         for(int counter = 0; counter < i; counter++) {
@@ -226,29 +230,32 @@ int64_t get(list *l, int i) {
     return currNode->data;
 }
 
-// O(n)
+/* Sets the element at index i to v provided that 0 <= i < occupied_size. If i is out of bounds, prints an error, fails an assertion, and does nothing.
+O(n) worst-case */
 void set(list *l, int i, int64_t v) {
-    // error if list is empty
+    // Error if list is empty
     if(l->size == 0) {
         printf("ERROR: cannot set element in empty list\n");
-        return -1;
+        assert(0 != 0);
+        return;
     }
 
-    // error if index is bigger than list
+    // Error if index is bigger than list
     if(l->size <= i) {
         printf("ERROR: set index exceeds list size\n");
-        return -1;
+        assert(0 != 0);
+        return;
     }
 
     node* currNode = l->left;
-    // regular logic
+    // Regular logic increments i times from the left
     if(!l->is_reversed) {
         for(int counter = 0; counter < i; counter++) {
             currNode = currNode->next;
         }
     }
 
-    // reversed logic
+    // Reversed logic increments size - i - 1 times from the left
     else {
         i = l->size - i - 1;
         for(int counter = 0; counter < i; counter++) {
@@ -257,23 +264,13 @@ void set(list *l, int i, int64_t v) {
     }
     
     currNode->data = v;
-    
     return;
 }
 
-// O(1)
+/* Reverses the list. 
+O(1) worst-case */
 void reverse(list *l) {
     l->is_reversed = !l->is_reversed;
-}
-
-void print_list(list* l) {
-    printf("size: %d || reversed? %d \ncontains: ", l->size, l->is_reversed);
-    for(int i = 0; i < l->size; i++) {
-        printf("%"PRId64, get(l, i));
-        printf(" ");
-    }
-    printf("\n");
-    return;
 }
 
 int main()
