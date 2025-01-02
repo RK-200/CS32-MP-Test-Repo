@@ -4,22 +4,24 @@
 
 This file is a compilation of brief proofs for the asymptotic behaviour of our dynamic array implementation of a dynamic list. The following table summarizes the expected time complexities based on the specifications of our MP.
 
-| Function  | Worst-case time complexity |
+| Function  | Time complexity |
 | ------------- | ------------- |
-| `make()`  | O(*l*)  |
-| `push_left()`  | O(1)  |
-| `push_right()`  | O(1)  |
-| `pop_left()`  | O(1)  |
-| `pop_right()`  | O(1)  |
-| `peek_left()`  | O(1)  |
-| `peek_right()`  | O(1)  |
-| `size()`  | O(1)  |
-| `empty()`  | O(1)  |
-| `get()`  | O(1)  |
-| `set()`  | O(1)  |
-| `reverse()`  | O(1)  |
+| `make()`  | O(*l*) worst-case |
+| `push_left()`  | O(1) amortized |
+| `push_right()`  | O(1) amortized |
+| `pop_left()`  | O(1) amortized |
+| `pop_right()`  | O(1) amortized |
+| `peek_left()`  | O(1) worst-case |
+| `peek_right()`  | O(1) worst-case |
+| `size()`  | O(1) worst-case |
+| `empty()`  | O(1) worst-case |
+| `get()`  | O(1) worst-case |
+| `set()`  | O(1) worst-case |
+| `reverse()`  | O(1) worst-case |
 
 Additionally, this dynamic array implementation is expected to have a **worst-case memory complexity of O(n)**
+
+<insert general outline here>
 
 It is important to keep in mind while perusing these proofs that the constant time `reverse()` is achieved by writing a regular and reversed implementation for most of the functions. This means that there will be at least two cases for most of the proofs in this file.
 
@@ -29,16 +31,19 @@ Lastly, we will be analyzing similar functions in pairs or groups to keep the pr
 
 The first of these logical pairs are the `push_left()` and `push_right()` functions.
 
-They have similar implementations which are each divided into three cases: a regular case, a reversed case, and an empty list case.
+They have similar implementations which are each divided into three cases: a regular case, a reversed case, and a full list case.
 
 ```c
-// Non-reversed behaviour creates a new node, sets it as the left to the current leftmost node, then sets it as the new leftmost node
+// Non-reversed logic moves the front index one space to the left and inserts v at that index
 if(!l->is_reversed) {
-    node* new_node = createNode(v);
-    new_node->next = l->left;
-    l->left->prev = new_node;
-    l->left = new_node;
-    l->size += 1;
+    l->front -= 1;  
+
+    if(l->front < 0) {
+        l->front += l->capacity;
+    }
+
+    l->data[l->front] = v;
+    l->occupied_size++;
     return;
 }
 ```
