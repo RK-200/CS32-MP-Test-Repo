@@ -19,7 +19,7 @@ This file is a compilation of brief proofs for the asymptotic behaviour of our d
 | `set()`  | O(log n) expected |
 | `reverse()`  | O(1) worst-case |
 
-Additionally, this skip list implementation is expected to have a **worst-case memory complexity of O(n)**
+Additionally, this skip list implementation has a **expected memory complexity of O(n)**
 
 ## 1. push_left(*l*, *v*), push_right(*l*, *v*)
 First, $`push\_left()`$ and $`push\_right()`$ both make a call to $`generate\_random\_level()`$ to randomly generate the number of layers the given element will appear in. The probability that an element has a node at the level $i$ is $p^{i-1}$. Thus, the expected height $l$ of an element in a skip list is:
