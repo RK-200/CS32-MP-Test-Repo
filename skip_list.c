@@ -337,10 +337,10 @@ int64_t get(skip_list *l, int i){
     node* node_at_i;
     if (l->reversed){
         // Index counting starts from the right if list is reversed
-        node_at_i = get_node_at_i(l, l->size - i - 1)->val;
+        node_at_i = get_node_at_i(l, l->size - i - 1);
     }
     else{
-        node_at_i = get_node_at_i(l, i)->val;
+        node_at_i = get_node_at_i(l, i);
     }
     if (node_at_i){
         return node_at_i->val;
@@ -501,4 +501,15 @@ int main(void){
     assert(empty(l));
     assert(size(l) == 0);
     print_list(l);
+
+    int64_t q[] = {1};
+    skip_list* a = make(0, q);
+    for (int i = 0; i < 10; i++){
+        push_left(a, i);
+    }
+    for (int i = 0; i < 3; i++){
+        pop_right(a);
+    }
+    assert(get(a, 2) == 7);
+    print_list(a);
 }
