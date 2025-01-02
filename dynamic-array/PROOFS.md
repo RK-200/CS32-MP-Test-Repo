@@ -67,9 +67,6 @@ c(i) =
 \end{equation}
 `$
 
-
-
-
 $`
 \begin{equation} 
 \begin{split}
@@ -82,6 +79,21 @@ $`
     &=3n-2 \\
     &=3n-2<3n \\
     &=O(n)
+\end{split}
+\end{equation}
+`$
+
+
+Therefore, the cost for n `push()` calls is O(n). Recall that
+
+$`
+\begin{equation} 
+\begin{split}
+    &\text{amortized cost per operation = }
+    &\frac{\text{total cost for all operations}}{\text{number of operations}} \\
+    &\text{thus, we have:} \\
+    &\frac{O(n)}{n}
+    =O(1) \text{ amortized}
 \end{split}
 \end{equation}
 `$
