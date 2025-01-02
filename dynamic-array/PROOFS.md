@@ -29,9 +29,10 @@ Lastly, we will be analyzing similar functions in pairs or groups to keep the pr
 
 ## 1. push_left(*l*, *v*), push_right(*l*, *v*)
 
+### 1.1 The three cases
 The first of these logical pairs are the `push_left()` and `push_right()` functions.
 
-They have similar implementations which are each divided into three cases: a regular case, a reversed case, and a full list case.
+They have similar implementations which are each divided into three cases: a regular case, a reversed case, and a full list case. Due to the analogous nature of their implementations, we will use `push()` to refer to both `push_left()` and `push_right()` in this proof.
 
 ```c
 // Non-reversed logic moves the front index one space to the left and inserts v at that index
@@ -47,6 +48,23 @@ if(!l->is_reversed) {
     return;
 }
 ```
+
+1.) establish na the regular and reversed cases take O(1)
+2.) amortize that shit
+
+### 1.2 Amortized analysis via the aggregate method
+In line with the analysis above, the cost for the *i*<sup>th</sup> `push()` call can be formally expressed as:
+
+$`
+\begin{equation} 
+c(i) = 
+    \begin{cases}
+        i, & \text{when i - 1 is an exact power of 2} \\
+        1, & \text{otherwise}
+    \end{cases}
+\end{equation}
+`$
+
 
 ## 2. make(*n*, *seq*)
 
