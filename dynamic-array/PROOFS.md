@@ -104,6 +104,40 @@ $`
 ## 3. pop_left(*l*), pop_right(*l*)
 
 ## 4. peek_left(*l*), peek_right(*l*)
+The `peek()` functions have three cases: regular, reversed, and empty. Both functions have similar implementations. Let us take `peek_left()` as our example.
+
+### 4.1 Empty case
+```c
+if(l->occupied_size == 0) {
+    printf("ERROR: cannot peek from list of size 0");
+    assert(0 != 0);
+    return -1;
+}
+```
+The empty case returns after performing an O(1) `printf()` and an `assert()`. This makes the empty case run in O(1) worst-case.
+
+
+### 4.2 Regular case
+```c
+if(!l->is_reversed) {
+        return l->data[l->front];
+    }
+```
+The regular case returns the value of an indexing operation. This operation runs in constant time since `l->data` refers to the address of the initial element of a default C array. Indexing arrays in C takes constant time, thus, the regular case runs in O(1) worst-case.
+
+### 4.3 Reverse case
+```c
+// Reversed logic uses the non-reversed implementation of peek_right()
+if(l->is_reversed) {
+    l->is_reversed = false;
+    int64_t ret = peek_right(l);
+    l->is_reversed = true;
+    return ret;
+}
+```
+The reverse case flips the value of `l->is_reversed` twice and calls the regular case of the other `peek()` function. All of these steps run in O(1) time, thus, the reverse case also runs in O(1) time.
+
+Since all three cases run in O(1) time, the `peek_left()` and `peek_right()` functions both run in O(1) in the worst-case.
 
 ## 5. size(*l*), empty(*l*), reverse(*l*)
 
