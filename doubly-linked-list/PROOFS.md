@@ -23,10 +23,14 @@ Additionally, this doubly linked list implementation is expected to have a **wor
 
 It is important to keep in mind while perusing these proofs that the constant time `reverse()` is achieved by writing a regular and reversed implementation for most of the functions. This means that there will be at least two cases for most of the proofs in this file.
 
+Lastly, we will be analyzing similar functions in pairs or groups to keep the proofs concise.
+
 ## 1. push_left(*l*, *v*), push_right(*l*, *v*)
 
-`push_left()` and `push_right()` smth smth similar implementations
-Their implementations are divided into three cases: a reversed case, 
+The first of these logical pairs are the `push_left()` and `push_right()` functions.
+
+They have similar implementations which are each divided into three cases: a regular case, a reversed case, and an empty list case.
+
 ```c
 // Non-reversed behaviour creates a new node, sets it as the left to the current leftmost node, then sets it as the new leftmost node
 if(!l->is_reversed) {
@@ -40,6 +44,7 @@ if(!l->is_reversed) {
 ```
 
 ## 2. make(*n*, *seq*)
+
 
 ## 3. pop_left(*l*), pop_right(*l*)
 
