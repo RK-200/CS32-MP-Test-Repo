@@ -53,6 +53,8 @@ if(!l->is_reversed) {
 2.) amortize that shit
 
 ### 1.2 Amortized analysis via the aggregate method
+Let us assume that the initial array capacity is a power of 2. This simplifies our calculations as the array capacity will remain a power of 2 after each doublying. 
+
 In line with the analysis above, the cost for the *i*<sup>th</sup> `push()` call can be formally expressed as:
 
 $`
@@ -65,6 +67,24 @@ c(i) =
 \end{equation}
 `$
 
+
+
+
+$`
+\begin{equation} 
+\begin{split}
+    \text{cost of n pushes:} \\ \\
+    &\sum^{n}_{i = 1} \text c(i) \\
+    &=n+\sum^{\lfloor j=log_2(n - 1)\rfloor}_{j=0} 2^j &&\text{j is equal to the number of times the array would have doubled in size given i pushes} \\
+    &=n+\frac{2^{log_2(n - 1) + 1} - 1}{2-1} &&\text{standard summation formula}\\
+    &=n+2^{\lfloor log_2(2(n-1))\rfloor}  \\
+    &=n+2(n-1) &&\text{simplify using log rules} \\
+    &=3n-2 \\
+    &=3n-2<3n \\
+    &=O(n)
+\end{split}
+\end{equation}
+`$
 
 ## 2. make(*n*, *seq*)
 
