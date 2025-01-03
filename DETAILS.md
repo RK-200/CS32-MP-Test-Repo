@@ -64,3 +64,9 @@ After searching for the node, `get` returns the `value` field of the returned no
 
 ## 7. reverse(*l*)
 Calling `reverse` on the input list *l* sets the `reversed` field of *l* to the opposite value. Instead of reversing the pointers of each node, only the behaviors of each of the previous functions will be reversed, so the list will behave as if it was actually reversed. 
+
+## References
+Chumbley, A., Williams, C., Branco, J., Khim, J., & Ross, E. (n.d.). *Skip list*. Brilliant. https://brilliant.org/wiki/skip-lists/ 
+
+
+Wikipedia contributors. (2024, December 30). *Skip list*. Wikipedia, The Free Encyclopedia. Retrieved 09:01, January 3, 2025, from https://en.wikipedia.org/w/index.php?title=Skip_list&oldid=1266213396
