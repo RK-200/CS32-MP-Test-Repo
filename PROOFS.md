@@ -2,7 +2,7 @@
 
 ## 0. Introduction and Summary of Time Complexities
 
-This file is a compilation of brief proofs for the asymptotic behaviour of our dynamic array implementation of a dynamic list. The following table summarizes the expected time complexities based on the specifications of our MP.
+This file is a compilation of brief proofs for the asymptotic behaviour of our skip list implementation of a dynamic list. The following table summarizes the expected time complexities based on the specifications of our MP.
 
 | Function  | Time complexity |
 | ------------- | ------------- |
