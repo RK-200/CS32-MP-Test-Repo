@@ -252,6 +252,10 @@ bool pop_right(skip_list *l){
 
 // Returns the value of the leftmost element
 int64_t peek_left(skip_list *l){
+    if (empty(l)){
+        printf("ERROR: list is empty!");
+        return;
+    }
     // Instead returns the rightmost value if list is reversed
     if (l->reversed){
         l->reversed = false;
@@ -264,6 +268,10 @@ int64_t peek_left(skip_list *l){
 
 // Returns the value of the leftmost element
 int64_t peek_right(skip_list *l){
+    if (empty(l)){
+        printf("ERROR: list is empty!");
+        return;
+    }
     // Instead returns the leftmost value if list is reversed
     if (l->reversed){
         l->reversed = false;
