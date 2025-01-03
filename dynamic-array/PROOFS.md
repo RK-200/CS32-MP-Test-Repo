@@ -27,13 +27,25 @@ It is important to keep in mind while perusing these proofs that the constant ti
 
 Lastly, we will be analyzing similar functions in pairs or groups to keep the proofs concise.
 
-## 1. push_left(*l*, *v*), push_right(*l*, *v*)
+## 1. make(*n*, *seq*)
+The `make()` function allocates a `list` in the heap then initializes its values through a series of O(1) assignment operations. It then runs the following loop:
 
-The first of these logical pairs are the `push_left()` and `push_right()` functions.
+```c
+for(int i = 0; i < n; i++) {
+    d->data[i] = seq[i];
+    d->occupied_size += 1;
+}
+```
+
+Since the loop iterates through the entirety of the array `seq`, we can conclude that it runs in O(*l*) time if *l* is the length of the `seq` array.
+
+## 2 push_left(*l*, *v*), push_right(*l*, *v*)
+
+The first of the logical pairs are the `push_left()` and `push_right()` functions.
 
 They have similar implementations which are each divided into three cases: a regular case, a reversed case, and a full list case. Due to the analogous nature of their implementations, we will use `push()` to refer to both `push_left()` and `push_right()` in this proof.
 
-### 1.1 The regular case
+### 2.1 The regular case
 The regular (non-reversed) logic simply moves the front index one space to the left and inserts v at that index.
 
 ```c
@@ -52,7 +64,7 @@ if(!l->is_reversed) {
 
 Seeing as this is simply a series of O(1) operations, we can conclude that the regular case runs in O(1) time.
 
-### 1.2 The reversed case
+### 2.2 The reversed case
 The reversed case uses the non-reversed implementation of the opposite function (i.e. `push_left()` calls `push_right()` and vice versa).
 
 ```c
@@ -66,7 +78,7 @@ if(l->is_reversed) {
 
 As established above, the regular case runs in O(1). The reversed case simply adds two more O(1) operations, retaining the linear time complexity of `push()`.
 
-### 1.3 Amortized analysis via the aggregate method
+### 2.3 Amortized analysis via the aggregate method
 For the full list case, let us assume that the initial array capacity is a power of 2. This simplifies our calculations as the array capacity will remain a power of 2 after each doublying. 
 
 In line with the analysis above, the cost for the *i*<sup>th</sup> `push()` call can be formally expressed as:
@@ -81,7 +93,7 @@ c(i) =
 \end{equation}
 `$
 
-This is because `push()` calls take constant time in the regular and reversed cases as established in subsections 1.1 and 1.2.
+This is because `push()` calls take constant time in the regular and reversed cases as established in subsections 2.1 and 2.2.
 
 $`
 \begin{equation} 
@@ -99,7 +111,6 @@ $`
 \end{equation}
 `$
 
-
 Therefore, the cost for n `push()` calls is O(n). Recall that
 
 $`
@@ -116,9 +127,6 @@ $`
 
 Put simply, `push()` takes O(n) time every n calls and O(1) otherwise. One O(n) operation every n calls is O(1) amortized.
 
-## 2. make(*n*, *seq*)
-
-
 ## 3. pop_left(*l*), pop_right(*l*)
 
 ## 4. peek_left(*l*), peek_right(*l*)
@@ -133,7 +141,6 @@ if(l->occupied_size == 0) {
 }
 ```
 The empty case returns after performing an O(1) `printf()` and an `assert()`. This makes the empty case run in O(1) worst-case.
-
 
 ### 4.2 Regular case
 ```c
@@ -176,6 +183,7 @@ void reverse(list *l) {
 ```
 
 ## 6. get(*l*, *i*)
+
 
 ## 7. set(*l*, *i*, *v*)
 
