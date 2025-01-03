@@ -129,7 +129,7 @@ Put simply, `push()` takes O(n) time every n calls and O(1) otherwise. One O(n) 
 
 ## 3. pop_left(*l*), pop_right(*l*)
 
-Its analysis follows the same logic as the `push()` functions. `pop()` takes O(n) time every 
+Its analysis follows the same logic as the `push()` functions. The regular and reversed cases run in O(1) time while the `pop()` takes O(n) time every 
 
 ## 4. peek_left(*l*), peek_right(*l*)
 The `peek()` functions have three cases: regular, reversed, and empty. Both functions have similar implementations. Let us take `peek_left()` as our example.
