@@ -146,3 +146,18 @@ Since all three cases run in O(1) time, the `peek_left()` and `peek_right()` fun
 ## 7. set(*l*, *i*, *v*)
 
 ## 8. Expected Space Complexity
+Since the backing dynamic array doubles and halves in size when the array goes above full and below 1/3 capacity respectively, then the space occupied by an array of n elements, $`s(n)`$ can be expressed as follows:
+
+$`\begin{equation} 
+\begin{split}
+    n\leq s(n) \leq 3n
+\end{split}
+\end{equation}`$
+
+The array **wastes the most space** when its size is at 1/3 of its capacity, taking up thrice the amount of space as its number of elements. This is expressed as $`3n`$. 
+
+The array **wastes the least space** when its size is equal to its capacity, taking up exactly $`n`$ space. 
+
+Since these bounds hold as $`n`$ grows to infinity, we can use these bounds to make conclusions about the dynamic array's asymptotic behaviour. We can say that the space complexity is bound above by O(3n) and below by O(n).
+
+As it is bound above and below by linear space complexities, the space complexity of our dynamic array is O(n).
