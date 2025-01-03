@@ -1,0 +1,418 @@
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+
+
+typedef struct Node{
+    int degree;
+    int64_t val;
+    struct Node* left_child;
+    struct Node* right_child;
+    struct Node* left;
+    struct Node* right;
+
+}node;
+node* new_node(int64_t val);
+node* new_node(int64_t val){
+    node* ret = malloc(sizeof(node));
+    ret->degree = 0;
+    ret->val = val;
+    ret->left_child = NULL;
+    ret->right_child = NULL;
+    ret->left = NULL;
+    ret->right = NULL;
+    return ret;
+}
+
+
+typedef struct list {
+    node* left_head;
+    node* right_head;
+    int64_t size;
+    int64_t nodes;
+    int64_t leftmost;
+    int64_t rightmost;
+    bool reverse;
+} list;
+
+
+
+
+list *make(int n, int64_t *seq);
+void push_left(list *l, int64_t v);
+void push_right(list *l, int64_t v);
+int64_t pop_left(list *l);
+int64_t pop_right(list *l);
+int64_t peek_left(list *l);
+int64_t peek_right(list *l);
+int size(list *l);
+bool empty(list *l);
+int64_t get(list *l, int i);
+void set(list *l, int i, int64_t v);
+void reverse(list *l);
+
+
+node* n_union(node* a,node* b){
+    node* ret = malloc(sizeof(node));
+    ret->val = 0;
+    ret->degree = a->degree+1;
+    
+    ret->left_child = a;
+    ret->right_child = b;
+    
+    ret->left = NULL;
+    ret->right = NULL;
+
+    a->left = NULL;
+    a->right = NULL;
+    b->left = NULL;
+    b->right = NULL;
+
+    return ret;
+    
+}
+
+
+list *make(int n, int64_t *seq){
+    list* ret = malloc(sizeof(list));
+    ret->reverse = false;
+    for(int i=0;i<n;i++){
+        push_right(ret,seq[i]);
+    }
+    return ret;
+}
+
+void push_left(list *l, int64_t v){
+    if(l->reverse){
+        l->reverse = false;
+        push_right(l,v);
+        l->reverse = true;
+        return; 
+    }
+    node* new = new_node(v);
+    l->leftmost = v;
+
+    if(l->size == 0){
+        l->left_head = new;
+        l->right_head = new;
+        l->rightmost = v;
+    }
+    else{
+        node* tmp = l->left_head;
+        l->left_head = new;
+        l->left_head->right = tmp;
+        tmp->left = new;
+    }
+    l->size++;
+    l->nodes++;
+    if(l->size > 1){
+        while(l->size > 1 && l->left_head->degree == l->left_head->right->degree){
+            node* r_temp = NULL;
+            if(l->left_head->right->right != NULL){
+                r_temp = l->left_head->right->right;
+            }
+            l->left_head = n_union(l->left_head,l->left_head->right);
+            l->left_head->right = r_temp;
+            l->size--;
+            if(l->size > 1){
+                l->left_head->right->left = l->left_head; 
+            }
+        }
+    }
+    if(l->size == 1){
+        l->right_head = l->left_head;
+    }
+}
+void push_right(list *l, int64_t v){
+    if(l->reverse){
+        l->reverse = false;
+        push_left(l,v);
+        l->reverse = true;
+        return; 
+    }
+    node* new = new_node(v);
+    l->rightmost = v;
+
+    if(l->size == 0){
+        l->left_head = new;
+        l->right_head = new;
+        l->leftmost = v;
+    }
+    else{
+        node* tmp = l->right_head;
+        l->right_head = new;
+        l->right_head->left = tmp;
+        tmp->right = new;
+    }
+    l->size++;
+    l->nodes++;
+    if(l->size > 1){
+        while(l->size > 1 && l->right_head->degree == l->right_head->left->degree){
+            node* l_temp = NULL;
+            if(l->right_head->left->left != NULL){
+                l_temp = l->right_head->left->left;
+            }
+            l->right_head = n_union(l->right_head->left,l->right_head);
+            l->right_head->left = l_temp;
+            
+            
+            l->size--;
+            if(l->size > 1){
+                l->right_head->left->right = l->right_head; 
+            }
+        }
+    }
+    if(l->size == 1){
+        l->left_head = l->right_head;
+    }
+}
+
+int64_t pop_left(list *l){
+    int64_t ret =0;
+    if (l->size == 0){
+        printf("Array Index error");
+        return ret;
+    }
+    if(l->reverse){
+        l->reverse = false;
+        ret = pop_right(l);
+        l->reverse = true;
+        return ret; 
+    }
+    l->nodes--;
+    
+    while(l->left_head->degree != 0){
+        //split
+        if(l->left_head->right == NULL){
+            node* lh= l->left_head;
+            l->left_head = lh->left_child;
+            l->right_head = lh->right_child;
+            l->left_head->right = l->right_head;
+            l->right_head->left = l->left_head;
+        }
+        else{
+            node* lh= l->left_head;
+            l->left_head = lh->left_child;
+            l->left_head->left = NULL;
+            l->left_head->right = lh->right_child;
+            l->left_head->right->left = l->left_head;
+            l->left_head->right->right = lh->right;
+
+        }
+        l->size++;
+    }
+    l->size--;
+    
+    node* tmp = l->left_head;
+    ret = tmp->val;
+    free(tmp);
+    if(l->size == 0){
+        l->left_head = NULL;
+        l->right_head = NULL;
+        l->leftmost = 0;
+        l->rightmost = 0;
+        return ret;
+    }
+    if(l->size >1){l->left_head = l->left_head->right;}
+    else{l->left_head=l->right_head;}
+    l->leftmost = l->left_head->val;
+    return ret;
+}
+
+int64_t pop_right(list *l){ 
+    int64_t ret =0;
+    if (l->size == 0){
+        printf("Array Index error");
+        return ret;
+    }
+    if(l->reverse){
+        l->reverse = false;
+        ret = pop_left(l);
+        l->reverse = true;
+        return ret; 
+    }
+    l->nodes--;
+    
+    while(l->right_head->degree != 0){
+        //split
+        if(l->right_head->left == NULL){
+            node* rh= l->right_head;
+            l->left_head = rh->left_child;
+            l->right_head = rh->right_child;
+            l->left_head->right = l->right_head;
+            l->right_head->left = l->left_head;
+        }
+        else{
+            node* rh= l->right_head;
+            l->right_head = rh->right_child;
+            l->right_head->right = NULL;
+            l->right_head->left = rh->left_child;
+            l->right_head->left->right = l->right_head;
+            l->right_head->left->left = rh->left;
+
+        }
+        l->size++;
+    }
+    l->size--;
+    
+    node* tmp = l->right_head;
+    ret = tmp->val;
+    free(tmp);
+    if(l->size == 0){
+        l->left_head = NULL;
+        l->right_head = NULL;
+        l->leftmost = 0;
+        l->rightmost = 0;
+        return ret;
+    }
+    if(l->size >1){l->right_head = l->right_head->left;}
+    else{l->right_head=l->left_head;}
+    l->rightmost = l->right_head->val;
+    return ret;
+}
+int64_t peek_left(list *l){
+    if(l->reverse){
+        l->reverse = false;
+        int64_t ret = peek_right(l);
+        l->reverse = true;
+        return ret; 
+    }
+    return l->leftmost;
+}
+int64_t peek_right(list *l){
+    if(l->reverse){
+        l->reverse = false;
+        int64_t ret = peek_left(l);
+        l->reverse = true;
+        return ret; 
+    }
+    return l->rightmost;
+}
+int size(list *l){
+    return l->size;
+}
+bool empty(list *l){
+    if(l->size==0){
+        return true;
+    }
+    return false;
+}
+int64_t get(list *l, int i){
+    if(l->size == 0){
+        return 0;
+    }
+    /*
+    s = -1
+        idx = -1
+
+        while s<i:
+            idx+=1
+            s += 2**self.trees[idx].get_deg()
+
+        n = self.trees[idx]
+        i2 = i - (s - 2**self.trees[idx].get_deg())
+        s = 2**self.trees[idx].get_deg()    
+        while n.get_deg() != 0:
+            if s/2  >= i2:
+                n = n.get_lc()
+                s = s/2
+            else:
+                n = n.get_rc()
+                s = s/2
+                i2 -= s
+        return n.val
+    
+    */
+    int64_t s = -1;
+    node* n = l->left_head;
+    while(s<i){
+        if(s!=-1){n=n->right;}
+        int64_t res = (1 << n->degree);
+        s += res;
+        
+    }
+    int64_t i2 = i - (s - (1 << n->degree));
+    s = 1 << n->degree;
+    while (n->degree!= 0){
+        if (s/2 >= i2){
+            n = n->left_child;
+            s = s/2;
+        }else{
+            n = n->right_child;
+            s = s/2;
+            i2 -= s;
+        }
+    }
+    return n->val;
+
+}
+void set(list *l, int i, int64_t v){
+    int64_t s = -1;
+    node* n = l->left_head;
+    while(s<i){
+        if(s!=-1){n=n->right;}
+        int64_t res = (1 << n->degree);
+        s += res;
+        
+    }
+    int64_t i2 = i - (s - (1 << n->degree));
+    s = 1 << n->degree;
+    while (n->degree!= 0){
+        if (s/2 >= i2){
+            n = n->left_child;
+            s = s/2;
+        }else{
+            n = n->right_child;
+            s = s/2;
+            i2 -= s;
+        }
+    }
+    n->val = v;
+}
+
+void reverse(list *l){
+    l->reverse ^= true;
+}
+
+
+int main(){
+    list* a = malloc(sizeof(list));
+    a->size = 0;
+    a->left_head = NULL;
+    a->right_head = NULL;
+    a->nodes = 0;
+    a->leftmost = 0;
+    a->rightmost = 0;
+    push_left(a,1);
+    push_left(a,2);
+    push_left(a,3);
+    push_left(a,4);
+    push_left(a,5);
+    push_left(a,6);
+    int64_t c[6] = {1,2,3,4,5,6};
+    list* b = make(6,c);
+    list* d = make(6,c);
+    printf("%d",get(d,0));
+    printf("%d",get(d,1));
+    printf("%d",get(d,2));
+    printf("%d",get(d,3));
+    printf("%d",get(d,4));
+    printf("%d",get(d,5));
+    printf("\n");
+    printf("%d",pop_right(d));
+    printf("%d",pop_right(d));
+    printf("%d",pop_right(d));
+    printf("%d",pop_right(d));
+    printf("%d",pop_right(d));
+    printf("%d",pop_right(d));
+    printf("\n");
+    printf("%d",pop_left(b));
+    printf("%d",pop_left(b));
+    printf("%d",pop_left(b));
+    printf("%d",pop_left(b));
+    printf("%d",pop_left(b));
+    printf("%d",pop_left(b));
+    
+    return 0;
+}
