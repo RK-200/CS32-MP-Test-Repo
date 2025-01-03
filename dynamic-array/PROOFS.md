@@ -129,6 +129,8 @@ Put simply, `push()` takes O(n) time every n calls and O(1) otherwise. One O(n) 
 
 ## 3. pop_left(*l*), pop_right(*l*)
 
+Its analysis follows the same logic as the `push()` functions. `pop()` takes O(n) time every 
+
 ## 4. peek_left(*l*), peek_right(*l*)
 The `peek()` functions have three cases: regular, reversed, and empty. Both functions have similar implementations. Let us take `peek_left()` as our example.
 
@@ -182,12 +184,10 @@ void reverse(list *l) {
 }
 ```
 
-## 6. get(*l*, *i*)
+## 6. get(*l*, *i*) and set(*l*, *i*, *v*)
+Both `get()` and `set()` perform an indexing operation along with some out-of-bounds checks. Without any loops or other size-dependent operations, we can conclude that both functons have a worst-case running time of O(1).
 
-
-## 7. set(*l*, *i*, *v*)
-
-## 8. Expected Space Complexity
+## 7. Expected Space Complexity
 Since the backing dynamic array doubles and halves in size when the array goes above full and below 1/3 capacity respectively, then the space occupied by an array of n elements, $`s(n)`$ can be expressed as follows:
 
 $`\begin{equation} 
