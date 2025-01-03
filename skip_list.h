@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include "skip_list_node.h"
 
+const uint32_t SEED = 1000; // Sets a fixed seed (set to 0 to let it be unseeded)
+const uint32_t MAX_HEIGHT = 32; // Maximum number of layers the skip list can reach
+const int P = 2; // Probability for element to be added to another layer is 1/P
+
 typedef struct skip_list {
     int size;
     node** heads; // Contains the heads of each layer

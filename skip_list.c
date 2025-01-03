@@ -8,10 +8,6 @@
 
 #include <assert.h>
 
-const uint32_t SEED = 1000; // Sets a fixed seed (set to 0 to let it be unseeded)
-const uint32_t MAX_HEIGHT = 32; // Maximum number of layers the skip list can reach
-const int P = 2; // Probability for element to be added to another layer is 1/P
-
 // Randomly generates how many layers an element will be in
 int generate_random_level(){ 
     int level = 0;
@@ -254,7 +250,8 @@ bool pop_right(skip_list *l){
 int64_t peek_left(skip_list *l){
     if (empty(l)){
         printf("ERROR: list is empty!");
-        return;
+        assert(0 != 0);
+        return -1;
     }
     // Instead returns the rightmost value if list is reversed
     if (l->reversed){
@@ -270,7 +267,8 @@ int64_t peek_left(skip_list *l){
 int64_t peek_right(skip_list *l){
     if (empty(l)){
         printf("ERROR: list is empty!");
-        return;
+        assert(0 != 0);
+        return -1;
     }
     // Instead returns the leftmost value if list is reversed
     if (l->reversed){
@@ -355,6 +353,7 @@ int64_t get(skip_list *l, int i){
     }
     else{
         printf("ERROR: index is out of bounds!");
+        assert(0 != 0);
         return -1;
     }
 }
@@ -378,6 +377,7 @@ void set(skip_list *l, int i, int64_t v){
     }
     else{
         printf("ERROR: index is out of bounds!");
+        assert(0 != 0);
         return;
     }
 }
