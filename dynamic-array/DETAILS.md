@@ -27,12 +27,20 @@ This does imply that our `reverse()` implementation runs in constant time. This 
 ## 4. Capacity doubling, push_left(*l*, *v*), and push_right(*l*, *v*)
 The array doubles in capacity whenever `push()` is called on a full array.
 
+![dynamic_array_rationale](https://github.com/user-attachments/assets/56b97669-ce63-4ff4-9d7c-5a6c80c4a811)
+
+
+
 ## 5. Capacity halving, pop_left(*l*), and pop_right(*l*)
 The array halves in capacity whenever `pop()` is called on an array whose size is equal to a third of its capacity.
 
 ## 6. Efficient indexing, get(*l*, *i*), and set(*l*, *i*, *v*)
 As mentioned in section 1, one of the greatest strengths of the dynamic array implementation is its constant-time indexing. The `get()` and `set()` functions are simplified due to the innate constant-time indexing of the underlying array. They simply have to calculate for the "real" index, access its address using the backing array, then either return or modify its value.
 
-The calculation for the offset index is very simple and is only complicated by the existence of a reverse case. The following figure illustrates these steps using the `get()` function as an example.
+The calculation for the offset index is very simple and is only complicated by the existence of a reverse case. The following figure illustrates these steps using the `set()` function as an example. Note that the `reverse()` call does not actually change the value of `front`. Concerned functions simply have a case handling reverse logic.
+
+![dynamic_array_set](https://github.com/user-attachments/assets/34134746-afa7-4f13-8fd0-e62956289b43)
+
+
 
 ## References
