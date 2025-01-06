@@ -7,7 +7,7 @@ Our implementation combines a circular deque with a reallocation scheme to creat
 
 The circular deque base is essential in making the array function as a dynamic list as it lets us handle insertions and deletions on both the front and the rear of the array while the reallocation functions give it dynamic properties. 
 
-The array doubles in size when attempting to add an element to a full array; it halves in size when attempting to remove an element from an array whose size is less than a third of its capacity. Two distinct constants are needed in order to prevent inefficient behaviour when alternating additions and deletions at the boundary of the resizing factor. This resizing scheme ensures 
+The array doubles in size when attempting to add an element to a full array; it halves in size when attempting to remove an element from an array whose size is equal to a third of its capacity. Two distinct constants are needed in order to prevent inefficient behaviour when alternating additions and deletions at the boundary of the resizing factor. This resizing scheme ensures 
 
 For example, given an array of two elements occupying indices 0 and 1 of an array, executing a `pop_left()` then a `push_left()` may work if the array keeps track of only the left index. However, without a circular deque implementation, a lone `push_left()` call would yield undefined behaviour as there is technically no index to the left of the leftmost index which is 0.
 
@@ -28,7 +28,7 @@ This does imply that our `reverse()` implementation runs in constant time. This 
 The array doubles in capacity whenever `push()` is called on a full array.
 
 ## 5. Capacity halving, pop_left(*l*), and pop_right(*l*)
-The array halves in capacity whenever `pop()` is called on an array whose size is less than a third of its capacity.
+The array halves in capacity whenever `pop()` is called on an array whose size is equal to a third of its capacity.
 
 ## 6. Efficient indexing, get(*l*, *i*), and set(*l*, *i*, *v*)
 As mentioned in section 1, one of the greatest strengths of the dynamic array implementation is its constant-time indexing. The `get()` and `set()` functions are simplified due to the innate constant-time indexing of the underlying array. They simply have to calculate for the "real" index, access its address using the backing array, then either return or modify its value.
