@@ -15,7 +15,9 @@ insert theoretical basis of dynamic array
   - resizing is a secret tool thatll help us later
 
 ## 3. size(*l*), empty(*l*), and reverse(*l*)
-These struct members allow us to create simple yet efficient implementations for the `size()`, `empty()`, and `reverse()` functions of a dynamic list
+The previously mentioned members of the `list` struct allows for simple and efficient implementations of the `size()`, `empty()`, and `reverse()` functions of a dynamic list. The first two functions reference the `occupied_size` variable while the `reverse()` function simply flips the value of the `is_reversed` boolean member.
+
+This does imply that our `reverse()` implementation runs in constant time. This efficiency is traded for more complexity in the code for the data structure itself as most other functions now require an implementation for the regular case and the reversed case of the dynamic array. Note that while this approach complicates the programming process, it does not affect the efficiency of the affected functions.
 
 ## 4. Capacity doubling, push_left(*l*, *v*), and push_right(*l*, *v*)
 
