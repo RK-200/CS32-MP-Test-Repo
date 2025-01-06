@@ -22,5 +22,8 @@ These struct members allow us to create simple yet efficient implementations for
 ## 5. Capacity halving, pop_left(*l*), and pop_right(*l*)
 
 ## 6. Efficient indexing, get(*l*, *i*), and set(*l*, *i*, *v*)
+As mentioned in section 1, one of the greatest strengths of the dynamic array implementation is its constant-time indexing. Since the underlying collection of the dynamic list is an array -- which innately has constant-time indexing -- the `get()` and `set()` functions simply have to calculate for the "real" index, access its address using the backing array, then either return or modify its value.
+
+The calculation for the offset index is very simple and is only complicated by the existence of a reverse case. The following figure illustrates these steps using the `get()` function as an example.
 
 ## References
