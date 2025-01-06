@@ -1,5 +1,5 @@
 # Dynamic Array Details
-## 1. Dynamic Array Rationale
+## 1. Dynamic array rationale
 
 The array data structure is a natural choice for the dynamic list as it offers a linear arrangement of elements while offering an O(1) indexing operation. This provides an easy path for implementing efficient `get()` and `set()` functions.
 
