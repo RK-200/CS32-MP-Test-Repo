@@ -32,7 +32,8 @@ The array doubles in capacity whenever `push()` is called on a full array.
 The array halves in capacity whenever `pop()` is called on an array whose size is equal to a third of its capacity. As explained in section 1, the system has hysteresis in that the array does not halve when it goes below half capacity. This is to avoid inefficient behaviour where the array frequently doubles and halves in size when performing operations near half capacity.
 
 The following figure illustrates this inefficient behaviour.
-![dynamic_array_hysteresis](https://github.com/user-attachments/assets/d1bd2b31-5c4e-4ccf-8f31-ead37d5edd65)
+![dynamic_array_hysteresis_v2](https://github.com/user-attachments/assets/d0ae68d4-c53e-4937-bf50-7e4ca2cfdcd1)
+
 
 ## 6. Efficient indexing, get(*l*, *i*), and set(*l*, *i*, *v*)
 As mentioned in section 1, one of the greatest strengths of the dynamic array implementation is its constant-time indexing. The `get()` and `set()` functions are simplified due to the innate constant-time indexing of the underlying array. They simply have to calculate for the "real" index, access its address using the backing array, then either return or modify its value.
