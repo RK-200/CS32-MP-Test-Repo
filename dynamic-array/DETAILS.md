@@ -1,13 +1,18 @@
 # Dynamic Array Details
 ## 1. Dynamic Array Rationale
 
-O(1) indexing 
-insert theoretical basis of dynamic array
-  - resize when asjcoaijc
-  - mention memory complexity
-  - mention na this allows for all operations to be performed in O(1)
-  - the deque behind the slaughter
-  - A circular-deque-based dynamic array is essential in making it function as a dynamic list. For example, given an array of two elements occupying indices 0 and 1 of an array, executing a `pop_left()` then a `push_left()` may work if the array keeps track of a left index. However, without a circular deque implementation, a lone `push_left()` call would yield undefined behaviour as there is technically no index to the left of the leftmost index which is 0.
+The array data structure is a natural choice for the dynamic list as it offers a linear arrangement of elements while offering an O(1) indexing operation. This provides an easy path for implementing efficient `get()` and `set()` functions.
+
+Our implementation combines a circular deque with a reallocation scheme to create a functional dynamic list. This allows for all dynamic list functions to run in O(1) time with the exception of `make()`.
+
+The circular deque base is essential in making the array function as a dynamic list as it lets us handle insertions and deletions on both the front and the rear of the array while the reallocation functions give it dynamic properties. 
+
+The array doubles in size when attempting to add an element to a full array; it halves in size when attempting to remove an element from an array whose size is less than a third of its capacity. Two distinct constants are needed in order to prevent inefficient behaviour when alternating additions and deletions at the boundary of the resizing factor. This resizing scheme ensures 
+
+For example, given an array of two elements occupying indices 0 and 1 of an array, executing a `pop_left()` then a `push_left()` may work if the array keeps track of only the left index. However, without a circular deque implementation, a lone `push_left()` call would yield undefined behaviour as there is technically no index to the left of the leftmost index which is 0.
+
+Our implementation solves this issue by keeping track of key array properties and storing them as members of a struct.
+
 ## 2. make(*n*, *seq*) and *dynamic_array.h* 
   - enumerate members
   - briefly describe functions (they just reallocate)
@@ -20,8 +25,10 @@ The previously mentioned members of the `list` struct allows for simple and effi
 This does imply that our `reverse()` implementation runs in constant time. This efficiency is traded for more complexity in the code for the data structure itself as most other functions now require an implementation for the regular case and the reversed case of the dynamic array. Note that while this approach complicates the programming process, it does not affect the efficiency of the affected functions.
 
 ## 4. Capacity doubling, push_left(*l*, *v*), and push_right(*l*, *v*)
+The array doubles in capacity whenever `push()` is called on a full array.
 
 ## 5. Capacity halving, pop_left(*l*), and pop_right(*l*)
+The array halves in capacity whenever `pop()` is called on an array whose size is less than a third of its capacity.
 
 ## 6. Efficient indexing, get(*l*, *i*), and set(*l*, *i*, *v*)
 As mentioned in section 1, one of the greatest strengths of the dynamic array implementation is its constant-time indexing. The `get()` and `set()` functions are simplified due to the innate constant-time indexing of the underlying array. They simply have to calculate for the "real" index, access its address using the backing array, then either return or modify its value.
