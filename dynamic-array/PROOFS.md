@@ -129,7 +129,37 @@ Put simply, `push()` takes O(n) time every n calls and O(1) otherwise. One O(n) 
 
 ## 3. pop_left(*l*), pop_right(*l*)
 
-Its analysis follows the same logic as the `push()` functions. The regular and reversed cases run in O(1) time while the `pop()` takes O(n) time every 
+Its analysis follows the same logic as the `push()` functions. The regular and reversed cases run in O(1) time while the `pop()` takes O(n) time every time n goes below 1/3 of the capacity.
+
+Assuming that we start with a full array that is a power of three, we have the following:
+
+$`
+\begin{equation} 
+c(i) = 
+    \begin{cases}
+        i, & \text{when i is equal to 3 raised to some integer} \\
+        1, & \text{otherwise}
+    \end{cases}
+\end{equation}
+`$
+
+$`
+\begin{equation} 
+\begin{split}
+    \text{cost of n pushes:} \\ \\
+    &\sum^{n}_{i = 1} \text c(i) \\
+    &=n+\sum^{\lfloor j=log_3(n - 1)\rfloor}_{j=0} 3^j &&\text{j is equal to the number of times the array would have halved in size given i pops} \\
+    &=n+\frac{3^{log_3(n - 1) + 1} - 1}{3-1} &&\text{standard summation formula}\\
+    &=\frac{n+2^{\lfloor log_3(3(n-1))\rfloor}}{2}  \\
+    &=\frac{n+2(n-1)}{2} &&\text{simplify using log rules} \\
+    &=\frac{3n-2}{2} \\
+    &=\frac{3n-2}{2}<3n \\
+    &=O(n)
+\end{split}
+\end{equation}
+`$
+
+Therefore, the cost for n `pop()` calls is O(n) and the amortized cost for one `pop()` is O(1).
 
 ## 4. peek_left(*l*), peek_right(*l*)
 The `peek()` functions have three cases: regular, reversed, and empty. Both functions have similar implementations. Let us take `peek_left()` as our example.
