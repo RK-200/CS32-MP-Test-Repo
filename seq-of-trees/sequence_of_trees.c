@@ -2,18 +2,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include "sequence_of_trees.h"
 
-
-typedef struct Node{
-    int degree;
-    int64_t val;
-    struct Node* left_child;
-    struct Node* right_child;
-    struct Node* left;
-    struct Node* right;
-
-}node;
-node* new_node(int64_t val);
 node* new_node(int64_t val){
     node* ret = malloc(sizeof(node));
     ret->degree = 0;
@@ -24,34 +14,6 @@ node* new_node(int64_t val){
     ret->right = NULL;
     return ret;
 }
-
-
-typedef struct list {
-    node* left_head;
-    node* right_head;
-    int64_t size;
-    int64_t nodes;
-    int64_t leftmost;
-    int64_t rightmost;
-    bool reverse;
-} list;
-
-
-
-
-list *make(int n, int64_t *seq);
-void push_left(list *l, int64_t v);
-void push_right(list *l, int64_t v);
-int64_t pop_left(list *l);
-int64_t pop_right(list *l);
-int64_t peek_left(list *l);
-int64_t peek_right(list *l);
-int size(list *l);
-bool empty(list *l);
-int64_t get(list *l, int i);
-void set(list *l, int i, int64_t v);
-void reverse(list *l);
-
 
 node* n_union(node* a,node* b){
     node* ret = malloc(sizeof(node));
@@ -72,7 +34,6 @@ node* n_union(node* a,node* b){
     return ret;
     
 }
-
 
 list *make(int n, int64_t *seq){
     list* ret = malloc(sizeof(list));
@@ -167,7 +128,6 @@ void push_right(list *l, int64_t v){
         l->left_head = l->right_head;
     }
 }
-
 int64_t pop_left(list *l){
     int64_t ret =0;
     if (l->size == 0){
@@ -219,7 +179,6 @@ int64_t pop_left(list *l){
     l->leftmost = l->left_head->val;
     return ret;
 }
-
 int64_t pop_right(list *l){ 
     int64_t ret =0;
     if (l->size == 0){
@@ -298,32 +257,11 @@ bool empty(list *l){
     }
     return false;
 }
-int64_t get(list *l, int i){
+int64_t get(list *l, int i){ //TODO: reverse get
     if(l->size == 0){
         return 0;
     }
-    /*
-    s = -1
-        idx = -1
 
-        while s<i:
-            idx+=1
-            s += 2**self.trees[idx].get_deg()
-
-        n = self.trees[idx]
-        i2 = i - (s - 2**self.trees[idx].get_deg())
-        s = 2**self.trees[idx].get_deg()    
-        while n.get_deg() != 0:
-            if s/2  >= i2:
-                n = n.get_lc()
-                s = s/2
-            else:
-                n = n.get_rc()
-                s = s/2
-                i2 -= s
-        return n.val
-    
-    */
     int64_t s = -1;
     node* n = l->left_head;
     while(s<i){
@@ -370,49 +308,8 @@ void set(list *l, int i, int64_t v){
     }
     n->val = v;
 }
-
 void reverse(list *l){
     l->reverse ^= true;
 }
 
 
-int main(){
-    list* a = malloc(sizeof(list));
-    a->size = 0;
-    a->left_head = NULL;
-    a->right_head = NULL;
-    a->nodes = 0;
-    a->leftmost = 0;
-    a->rightmost = 0;
-    push_left(a,1);
-    push_left(a,2);
-    push_left(a,3);
-    push_left(a,4);
-    push_left(a,5);
-    push_left(a,6);
-    int64_t c[6] = {1,2,3,4,5,6};
-    list* b = make(6,c);
-    list* d = make(6,c);
-    printf("%d",get(d,0));
-    printf("%d",get(d,1));
-    printf("%d",get(d,2));
-    printf("%d",get(d,3));
-    printf("%d",get(d,4));
-    printf("%d",get(d,5));
-    printf("\n");
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("\n");
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    
-    return 0;
-}
