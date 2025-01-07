@@ -257,7 +257,12 @@ bool empty(list *l){
     }
     return false;
 }
-int64_t get(list *l, int i){ //TODO: reverse get
+int64_t get(list *l, int i){ 
+
+    if(l->reverse){
+        i = l->nodes-i-1;
+    }
+
     if(l->size == 0){
         return 0;
     }
@@ -286,6 +291,16 @@ int64_t get(list *l, int i){ //TODO: reverse get
 
 }
 void set(list *l, int i, int64_t v){
+
+    if(l->reverse){
+        i = l->nodes-i-1;
+    }
+
+    if(l->size == 0){
+        printf("invalid");
+    }
+
+
     int64_t s = -1;
     node* n = l->left_head;
     while(s<i){

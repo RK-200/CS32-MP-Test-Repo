@@ -1,43 +1,83 @@
 #include "sequence_of_trees.c"
 #include <stdio.h>
 
+
+void print_list(list* l);
+void print_list(list* l){
+    printf("[");
+    for(int i=0;i<l->nodes-1;i++){
+        printf("%lld, ",get(l,i));
+    }
+    printf("%lld]\n",get(l,l->nodes-1));
+}
+
+
 int main(){
-    list* a = malloc(sizeof(list));
-    a->size = 0;
-    a->left_head = NULL;
-    a->right_head = NULL;
-    a->nodes = 0;
-    a->leftmost = 0;
-    a->rightmost = 0;
-    push_left(a,1);
-    push_left(a,2);
-    push_left(a,3);
-    push_left(a,4);
-    push_left(a,5);
-    push_left(a,6);
-    int64_t c[6] = {1,2,3,4,5,6};
-    list* b = make(6,c);
-    list* d = make(6,c);
-    printf("%d",get(d,0));
-    printf("%d",get(d,1));
-    printf("%d",get(d,2));
-    printf("%d",get(d,3));
-    printf("%d",get(d,4));
-    printf("%d",get(d,5));
-    printf("\n");
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("%d",pop_right(d));
-    printf("\n");
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    printf("%d",pop_left(b));
-    
+    char control = 'a';
+    int64_t val = 0;
+    int idx = 0;
+    int64_t arr[1] = {0}; //TODO: make this editable in bash
+    list* test = make(1,arr);
+
+    while (control != 'n'){
+    scanf("%c",&control);
+    switch (control){
+        case 'a':
+        scanf("%lld",&val);
+        push_left(test,val);
+        break;
+        
+        case 'b':
+        scanf("%lld",&val);
+        push_right(test,val);
+        break;
+
+        case 'c':
+        printf("%lld\n",pop_left(test));
+        break;
+
+        case 'd':
+        printf("%lld\n",pop_right(test));
+        break;
+
+        case 'e':
+        printf("%lld\n",peek_left(test));
+        break;
+
+        case 'f':
+        printf("%lld\n",peek_right(test));
+        break;
+
+        case 'g':
+        printf("%d\n",size(test));
+        break;
+
+        case 'h':
+        printf("%s\n",empty(test) ? "true" : "false");
+        break;
+
+        case 'i':
+        scanf("%d",&idx);
+        printf("%lld\n",get(test,idx));
+        break;
+
+        case 'j':
+        scanf("%d",&idx);
+        scanf("%lld",&val);
+        set(test,idx,val);
+        break;
+
+        case 'k':
+        reverse(test);
+        break;
+
+    }
+}
+
+    int64_t t[3] = {1,2,3};
+    list* b = make(3,t);
+    reverse(b);
+    print_list(b);
+
     return 0;
 }
