@@ -6,7 +6,7 @@ The doubly linked list implementation leverages O(1) creation and deletion of el
 List elements are represented as nodes which are created and deleted on demand. This means that it only takes up exactly the amount of space it needs, with no excess.
 
 ## 2. General structure, make(*n*, *seq*) and *dll_node.h* 
-A header file, *dll_node.h*, underpins the entire implementation as it houses the details for the `node`. `Node`s are the individual elements that link together to form a doubly linked list. Each node tracks three pieces of information: the address of the node to its left, the node to its right, and the data the node itself stores.
+A header file, *dll_node.h*, underpins the entire implementation as it houses the details for the `node`. `node`s are the individual elements that link together to form a doubly linked list. Each node tracks three pieces of information: the address of the node to its left, the node to its right, and the data the node itself stores.
 
 These `node`s are initialized using the `make()` function but can be created or deleted using the `push()` and `pop()` functions once an initial list is made. 
 
