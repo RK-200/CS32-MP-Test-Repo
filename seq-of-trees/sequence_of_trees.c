@@ -37,6 +37,12 @@ node* n_union(node* a,node* b){
 
 list *make(int n, int64_t *seq){
     list* ret = malloc(sizeof(list));
+    ret->left_head = NULL;
+    ret->right_head = NULL;
+    ret->size = 0;
+    ret->nodes = 0;
+    ret->leftmost = 0;
+    ret->rightmost = 0;
     ret->reverse = false;
     for(int i=0;i<n;i++){
         push_right(ret,seq[i]);
@@ -231,20 +237,18 @@ int64_t pop_right(list *l){
     return ret;
 }
 int64_t peek_left(list *l){
+    if(l->size == 0 ){
+        printf("empty");
+        assert(0!=0);
+    }
     if(l->reverse){
-        l->reverse = false;
-        int64_t ret = peek_right(l);
-        l->reverse = true;
-        return ret; 
+        return l->rightmost;
     }
     return l->leftmost;
 }
 int64_t peek_right(list *l){
     if(l->reverse){
-        l->reverse = false;
-        int64_t ret = peek_left(l);
-        l->reverse = true;
-        return ret; 
+        l->leftmost;
     }
     return l->rightmost;
 }
@@ -257,16 +261,8 @@ bool empty(list *l){
     }
     return false;
 }
-int64_t get(list *l, int i){ 
 
-    if(l->reverse){
-        i = l->nodes-i-1;
-    }
-
-    if(l->size == 0){
-        return 0;
-    }
-
+node* traverse(list *l,int i){
     int64_t s = -1;
     node* n = l->left_head;
     while(s<i){
@@ -276,52 +272,47 @@ int64_t get(list *l, int i){
         
     }
     int64_t i2 = i - (s - (1 << n->degree));
-    s = 1 << n->degree;
+    int64_t k = 1 << n->degree;
     while (n->degree!= 0){
-        if (s/2 >= i2){
+        if (k/2 >= i2){
             n = n->left_child;
-            s = s/2;
+            k = k/2;
         }else{
             n = n->right_child;
-            s = s/2;
-            i2 -= s;
+            k = k/2;
+            i2 -= k;
         }
     }
-    return n->val;
+    return n;
+}
+
+int64_t get(list *l, int i){ 
+    if(l->size == 0 || i >= l->nodes || i < 0){
+        printf("index error");
+        assert(0!=0);
+    }
+
+    if(l->reverse){
+        i = l->nodes-i-1;
+    }
+
+    node* ret = traverse(l,i);
+    
+    return ret->val;
 
 }
 void set(list *l, int i, int64_t v){
+    if(l->size == 0 || i >= l->nodes || i < 0){
+        printf("index error");
+        assert(0!=0);
+    }
 
     if(l->reverse){
         i = l->nodes-i-1;
     }
 
-    if(l->size == 0){
-        printf("invalid");
-    }
-
-
-    int64_t s = -1;
-    node* n = l->left_head;
-    while(s<i){
-        if(s!=-1){n=n->right;}
-        int64_t res = (1 << n->degree);
-        s += res;
-        
-    }
-    int64_t i2 = i - (s - (1 << n->degree));
-    s = 1 << n->degree;
-    while (n->degree!= 0){
-        if (s/2 >= i2){
-            n = n->left_child;
-            s = s/2;
-        }else{
-            n = n->right_child;
-            s = s/2;
-            i2 -= s;
-        }
-    }
-    n->val = v;
+    node* ret = traverse(l,i);
+    ret->val = v;
 }
 void reverse(list *l){
     l->reverse ^= true;
