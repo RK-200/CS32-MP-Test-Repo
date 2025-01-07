@@ -8,4 +8,4 @@
 ## 4. push_left(*l*, *v*), push_right(*l*, *v*), pop_left(*l*), and pop_right(*l*)
   - mention na its mostly just edge case handling, mention all the general cases
 
-## 5. O(n) indexing, , get(*l*, *i*), and set(*l*, *i*, *v*)
+## 5. O(n) indexing, get(*l*, *i*), and set(*l*, *i*, *v*)
