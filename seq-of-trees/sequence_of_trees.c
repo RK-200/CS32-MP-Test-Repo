@@ -4,25 +4,26 @@
 #include <stdio.h>
 #include "sequence_of_trees.h"
 
-node* new_node(int64_t val){
+node* new_node(int64_t val){ //function to create a new node
+    //initializes default node parameters
     node* ret = malloc(sizeof(node));
     ret->degree = 0;
-    ret->val = val;
+    ret->val = val;//assigns the passed variable v to val
     ret->left_child = NULL;
     ret->right_child = NULL;
     ret->left = NULL;
     ret->right = NULL;
-    return ret;
+    return ret; //returns the created node
 }
 
-node* n_union(node* a,node* b){
+node* n_union(node* a,node* b){ 
     node* ret = malloc(sizeof(node));
     ret->val = 0;
     ret->degree = a->degree+1;
     
     ret->left_child = a;
     ret->right_child = b;
-    
+
     ret->left = NULL;
     ret->right = NULL;
 
@@ -36,7 +37,7 @@ node* n_union(node* a,node* b){
 }
 
 list *make(int n, int64_t *seq){
-    list* ret = malloc(sizeof(list));
+    list* ret = malloc(sizeof(list));//initializes a list variable and assigns default list parameters
     ret->left_head = NULL;
     ret->right_head = NULL;
     ret->size = 0;
@@ -44,11 +45,57 @@ list *make(int n, int64_t *seq){
     ret->leftmost = 0;
     ret->rightmost = 0;
     ret->reverse = false;
-    for(int i=0;i<n;i++){
+    for(int i=0;i<n;i++){//iterating through the sequence and using n push_right()s generates the sequence of trees in the proper order in O(l) time 
         push_right(ret,seq[i]);
     }
     return ret;
 }
+
+
+void merge(list* l,char start){
+    if(start == 'l'){
+        if(l->size > 1){
+            while(l->size > 1 && l->left_head->degree == l->left_head->right->degree){
+                node* r_temp = NULL;
+                if(l->left_head->right->right != NULL){
+                    r_temp = l->left_head->right->right;
+                }
+                l->left_head = n_union(l->left_head,l->left_head->right);
+                l->left_head->right = r_temp;
+                l->size--;
+                if(l->size > 1){
+                    l->left_head->right->left = l->left_head; 
+                }
+            }
+        }
+        if(l->size == 1){
+            l->right_head = l->left_head;
+        }
+        return;
+    }
+    else{
+        if(l->size > 1){
+            while(l->size > 1 && l->right_head->degree == l->right_head->left->degree){
+                node* l_temp = NULL;
+                if(l->right_head->left->left != NULL){
+                    l_temp = l->right_head->left->left;
+                }
+                l->right_head = n_union(l->right_head->left,l->right_head);
+                l->right_head->left = l_temp;
+                
+                l->size--;
+                if(l->size > 1){
+                    l->right_head->left->right = l->right_head; 
+                }
+            }
+        }
+        if(l->size == 1){
+            l->left_head = l->right_head;
+        }
+        return;
+    }
+}
+
 
 void push_left(list *l, int64_t v){
     if(l->reverse){
@@ -73,23 +120,7 @@ void push_left(list *l, int64_t v){
     }
     l->size++;
     l->nodes++;
-    if(l->size > 1){
-        while(l->size > 1 && l->left_head->degree == l->left_head->right->degree){
-            node* r_temp = NULL;
-            if(l->left_head->right->right != NULL){
-                r_temp = l->left_head->right->right;
-            }
-            l->left_head = n_union(l->left_head,l->left_head->right);
-            l->left_head->right = r_temp;
-            l->size--;
-            if(l->size > 1){
-                l->left_head->right->left = l->left_head; 
-            }
-        }
-    }
-    if(l->size == 1){
-        l->right_head = l->left_head;
-    }
+    merge(l,'l');
 }
 void push_right(list *l, int64_t v){
     if(l->reverse){
@@ -114,25 +145,7 @@ void push_right(list *l, int64_t v){
     }
     l->size++;
     l->nodes++;
-    if(l->size > 1){
-        while(l->size > 1 && l->right_head->degree == l->right_head->left->degree){
-            node* l_temp = NULL;
-            if(l->right_head->left->left != NULL){
-                l_temp = l->right_head->left->left;
-            }
-            l->right_head = n_union(l->right_head->left,l->right_head);
-            l->right_head->left = l_temp;
-            
-            
-            l->size--;
-            if(l->size > 1){
-                l->right_head->left->right = l->right_head; 
-            }
-        }
-    }
-    if(l->size == 1){
-        l->left_head = l->right_head;
-    }
+    merge(l,'r');
 }
 int64_t pop_left(list *l){
     int64_t ret =0;
@@ -148,14 +161,16 @@ int64_t pop_left(list *l){
     }
     l->nodes--;
     
-    while(l->left_head->degree != 0){
+    while(l->left_head->degree > 0){
         //split
-        if(l->left_head->right == NULL){
+        if(l->size == 1){
             node* lh= l->left_head;
             l->left_head = lh->left_child;
             l->right_head = lh->right_child;
             l->left_head->right = l->right_head;
             l->right_head->left = l->left_head;
+            l->left_head->left = NULL;
+            l->right_head->right= NULL;
         }
         else{
             node* lh= l->left_head;
@@ -164,6 +179,7 @@ int64_t pop_left(list *l){
             l->left_head->right = lh->right_child;
             l->left_head->right->left = l->left_head;
             l->left_head->right->right = lh->right;
+            lh->right->left = l->left_head->right;
 
         }
         l->size++;
@@ -180,9 +196,14 @@ int64_t pop_left(list *l){
         l->rightmost = 0;
         return ret;
     }
-    if(l->size >1){l->left_head = l->left_head->right;}
-    else{l->left_head=l->right_head;}
-    l->leftmost = l->left_head->val;
+    if(l->size >1){
+        l->left_head = l->left_head->right;
+        merge(l,'l');
+        merge(l,'r');    
+    }
+    else{l->left_head=l->right_head;l->right_head = l->left_head;}
+    
+    l->leftmost = get(l,0);
     return ret;
 }
 int64_t pop_right(list *l){ 
@@ -201,20 +222,23 @@ int64_t pop_right(list *l){
     
     while(l->right_head->degree != 0){
         //split
-        if(l->right_head->left == NULL){
-            node* rh= l->right_head;
-            l->left_head = rh->left_child;
-            l->right_head = rh->right_child;
-            l->left_head->right = l->right_head;
+        if(l->size == 1){
+            node* lh= l->right_head;
+            l->right_head = lh->right_child;
+            l->left_head = lh->left_child;
             l->right_head->left = l->left_head;
+            l->left_head->right = l->right_head;
+            l->left_head->left = NULL;
+            l->right_head->right= NULL;
         }
         else{
-            node* rh= l->right_head;
-            l->right_head = rh->right_child;
+            node* lh= l->right_head;
+            l->right_head = lh->right_child;
             l->right_head->right = NULL;
-            l->right_head->left = rh->left_child;
+            l->right_head->left = lh->left_child;
             l->right_head->left->right = l->right_head;
-            l->right_head->left->left = rh->left;
+            l->right_head->left->left = lh->left;
+            lh->left->right = l->right_head->left;
 
         }
         l->size++;
@@ -231,9 +255,14 @@ int64_t pop_right(list *l){
         l->rightmost = 0;
         return ret;
     }
-    if(l->size >1){l->right_head = l->right_head->left;}
-    else{l->right_head=l->left_head;}
-    l->rightmost = l->right_head->val;
+    if(l->size >1){
+        l->right_head = l->right_head->left;
+        merge(l,'l');
+        merge(l,'r');
+    }
+    else{l->right_head=l->left_head;l->left_head = l->right_head;}
+    
+    l->rightmost = get(l,l->nodes-1);
     return ret;
 }
 int64_t peek_left(list *l){
@@ -263,11 +292,11 @@ bool empty(list *l){
 }
 
 node* traverse(list *l,int i){
-    int64_t s = -1;
+    int64_t s = -1,res;
     node* n = l->left_head;
     while(s<i){
         if(s!=-1){n=n->right;}
-        int64_t res = (1 << n->degree);
+        res = (1 << n->degree);
         s += res;
         
     }

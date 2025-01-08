@@ -11,13 +11,24 @@ void print_list(list* l){
     printf("%lld]\n",get(l,l->nodes-1));
 }
 
+void print_deg(list* l){
+    printf("[");
+    node* tmp = l->left_head;
+    for(int i=0;i<l->size-1;i++){
+        
+        printf("%lld, ",tmp->degree);
+        tmp = tmp->right;
+    }
+    printf("%lld]\n",l->right_head->degree);
+}
+
 
 int main(){
     char control = 'a';
     int64_t val = 0;
     int idx = 0;
     int64_t arr[1] = {0}; //TODO: make this editable in bash
-    list* test = make(1,arr);
+    list* test = make(0,arr);
 
     while (control != 'n'){
     scanf("%c",&control);
@@ -71,6 +82,17 @@ int main(){
         reverse(test);
         break;
 
+        case 'l':
+        print_list(test);
+        break;
+
+        case 'm':
+        printf("%d\n",test->nodes);
+        break;
+
+        case 'o':
+        print_deg(test);
+        break;
     }
 }
 

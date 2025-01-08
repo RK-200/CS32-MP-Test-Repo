@@ -3,6 +3,7 @@
 
 #include "st_node.h"
 #include <stdbool.h>
+#include <assert.h>
 
 typedef struct list {
     node* left_head;
