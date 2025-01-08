@@ -7,17 +7,16 @@ Our implementation combines a circular deque with a reallocation scheme to creat
 
 The circular deque base is essential in making the array function as a dynamic list as it lets us handle insertions and deletions on both the front and the rear of the array while the reallocation functions give it dynamic properties. 
 
-The array doubles in size when attempting to add an element to a full array; it halves in size when attempting to remove an element from an array whose size is equal to a third of its capacity. Two distinct constants are needed in order to prevent inefficient behaviour when performing additions and deletions at the boundary of the resizing factor. This resizing scheme ensures 
+The imperativeness of the circular deque is shown in the following example. Given an array of two elements occupying indices 0 and 1 of an array, executing a `pop_left()` then a `push_left()` may work if the array keeps track of only the left index. However, without a circular deque implementation, a lone `push_left()` call would yield undefined behaviour as there is technically no index to the left of the leftmost index which is 0. With a circular deque, index 0 - 1 loops back to the index equal to the array's max capacity - 1.
 
-For example, given an array of two elements occupying indices 0 and 1 of an array, executing a `pop_left()` then a `push_left()` may work if the array keeps track of only the left index. However, without a circular deque implementation, a lone `push_left()` call would yield undefined behaviour as there is technically no index to the left of the leftmost index which is 0.
-
-Our implementation solves this issue by keeping track of key array properties and storing them as members of a struct.
+This capacity is dynamic as the array doubles in size when attempting to add an element to a full array. It also halves in size when attempting to remove an element from an array whose size is equal to a third of its capacity.
 
 ## 2. make(*n*, *seq*) and *dynamic_array.h* 
-  - enumerate members
-  - briefly describe functions (they just reallocate)
-  -   allude to the earlier mentioned amortized concept (doubling every n, halving every n makes everything balance out to O(n))
-  - resizing is a secret tool thatll help us later
+The `dynamic_array.h` file contains the `list` struct which keeps track of list-level information such as the *occupied size*, *leftmost* index, *reversed* status, and the current *capacity* of the list.
+
+Aside from an initialization function, this header file houses two resizing functions: `expand_deque()` and `shrink_deque()`. These functions take an existing `list`, reserve some area in memory equivalent to either double or half its previous capacity (depending on if it is expanding or shrinking) then iterating through the previous elements to essentially create a new list of a different capacity. 
+
+This is an expensive operation that runs in O(n) time in the worst case. However, as it is only run after a certain number of `push()`es and `pop()`s that scales with the size of the list, it actually ends up costing O(1) when amortized. This is expounded upon in the `PROOFS.md` file located in the same folder as this file.
 
 ## 3. size(*l*), empty(*l*), and reverse(*l*)
 The previously mentioned members of the `list` struct allows for simple and efficient implementations of the `size()`, `empty()`, and `reverse()` functions of a dynamic list. The first two functions reference the `occupied_size` variable while the `reverse()` function simply flips the value of the `is_reversed` boolean member.
@@ -29,7 +28,7 @@ The array doubles in capacity whenever `push()` is called on a full array.
 ![dynamic_array_rationale](https://github.com/user-attachments/assets/56b97669-ce63-4ff4-9d7c-5a6c80c4a811)
 
 ## 5. Capacity halving, pop_left(*l*), and pop_right(*l*)
-The array halves in capacity whenever `pop()` is called on an array whose size is equal to a third of its capacity. As explained in section 1, the system has hysteresis in that the array does not halve when it goes below half capacity. This is to avoid inefficient behaviour where the array frequently doubles and halves in size when performing operations near half capacity.
+The array halves in capacity whenever `pop()` is called on an array whose size is equal to a third of its capacity. As mentioned in section 1, the system has hysteresis in that the array does not halve when it goes below half capacity. This is to avoid inefficient behaviour where the array frequently doubles and halves in size when performing operations near half capacity.
 
 The following figure illustrates this inefficient behaviour.
 ![dynamic_array_hysteresis_v2](https://github.com/user-attachments/assets/d0ae68d4-c53e-4937-bf50-7e4ca2cfdcd1)
@@ -40,7 +39,3 @@ As mentioned in section 1, one of the greatest strengths of the dynamic array im
 
 The calculation for the offset index is very simple and is only complicated by the existence of a reverse case. The following figure illustrates these steps using the `set()` function as an example. Note that the `reverse()` call does not actually change the value of `front`. Concerned functions simply have a case handling reverse logic.
 ![dynamic_array_set](https://github.com/user-attachments/assets/34134746-afa7-4f13-8fd0-e62956289b43)
-
-
-
-## References
