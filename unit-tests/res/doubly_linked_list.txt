@@ -1,4 +1,0 @@
-Output correct: doubly_linked_list
-Output correct: dynamic_array
-Output incorrect!: skip_list
-Output incorrect!: sequence_of_trees
