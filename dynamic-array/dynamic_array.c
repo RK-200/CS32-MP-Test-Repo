@@ -204,8 +204,8 @@ int64_t get(list *l, int i) {
 
         // OOB check
         // "if index is greater than rear index and list is not full"
-        if(index + 1 > (l->front + l->occupied_size) % l->capacity && l->occupied_size != l->capacity) {
-            printf("get index is out of bounds");
+        if((index + 1) % l->capacity > (l->front + l->occupied_size) % l->capacity && l->occupied_size != l->capacity) {
+            printf("get index is out of bounds | index: %d | occupied size: %d | capacity: %d | rear index: %d", index, l->occupied_size, l->capacity, (l->front + l->occupied_size) % l->capacity);
             assert(0 != 0);
             return -1;
         }
@@ -215,7 +215,7 @@ int64_t get(list *l, int i) {
     }
 
     if(l->is_reversed) {
-        index = (l->front + l->occupied_size - 1 - i) % l->capacity;       
+        index = (l->front + l->occupied_size - 1 - i) % l->capacity;    // THERE MIGHT BE SMTH HERE DIN   
         
         // OOB check
         // "if index is less than the front index and list is not full"
@@ -275,6 +275,7 @@ void reverse(list *l) {
     return;
 }
 
+/*
 int main()
 {
     int64_t seq[5] = {0, 1, 2, 3, 4};
@@ -374,3 +375,4 @@ int main()
 
     return 0;
 }
+*/

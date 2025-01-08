@@ -33,11 +33,11 @@ int main(){
         break;
 
         case 'c':
-        printf("%lld\n",pop_left(test));
+        printf("%s\n",pop_left(test) ? "true" : "false");
         break;
 
         case 'd':
-        printf("%lld\n",pop_right(test));
+        printf("%s\n",pop_right(test) ? "true" : "false");
         break;
 
         case 'e':
@@ -69,6 +69,10 @@ int main(){
 
         case 'k':
         reverse(test);
+        break;
+
+        case 'l':
+        print_list(test);
         break;
 
     }

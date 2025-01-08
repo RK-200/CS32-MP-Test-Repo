@@ -387,6 +387,7 @@ void reverse(list *l){
     l->reversed = !l->reversed;
 }
 
+/*
 // For debugging (doesn't print in reversed btw)
 void print_list(list* l){
     if (empty(l)){
@@ -521,3 +522,4 @@ int main(void){
     assert(get(a, 2) == 7);
     print_list(a);
 }
+*/

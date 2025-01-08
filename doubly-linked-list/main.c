@@ -16,8 +16,8 @@ int main(){
     char control = 'a';
     int64_t val = 0;
     int idx = 0;
-    int64_t arr[5] = {0, 1, 2, 3, 4}; //TODO: make this editable in bash
-    list* test = make(5,arr);
+    int64_t arr[1] = {0}; //TODO: make this editable in bash
+    list* test = make(1,arr);
 
     while (control != 'n'){
     scanf("%c",&control);
@@ -33,11 +33,11 @@ int main(){
         break;
 
         case 'c':
-        printf("%lld\n",pop_left(test));
+        printf("%s\n",pop_left(test) ? "true" : "false");
         break;
 
         case 'd':
-        printf("%lld\n",pop_right(test));
+        printf("%s\n",pop_right(test) ? "true" : "false");
         break;
 
         case 'e':
