@@ -197,35 +197,21 @@ bool empty(list *l) {
 /* Returns the element at index i provided that 0 <= i < occupied_size. If i is out of bounds, prints an error, fails an assertion, and returns -1.
 O(1) worst-case */
 int64_t get(list *l, int i) {
+    if(i < 0 || i > l->occupied_size) {
+        printf("get index is out of bounds | index: %d | front: %d | occupied size: %d | capacity: %d", i, l->front, l->occupied_size, l->capacity);
+        assert(0 != 0);
+        return -1;
+    }
+    
     int index; 
 
     if(!l->is_reversed) {
         index = (l->front + i) % l->capacity;
-
-        // OOB check
-        // "if index is greater than rear index and list is not full"
-        if((index + 1) % l->capacity > (l->front + l->occupied_size) % l->capacity && l->occupied_size != l->capacity) {
-            printf("get index is out of bounds | index: %d | occupied size: %d | capacity: %d | rear index: %d", index, l->occupied_size, l->capacity, (l->front + l->occupied_size) % l->capacity);
-            assert(0 != 0);
-            return -1;
-        }
-
-        // if in bounds
         return l->data[index];
     }
 
     if(l->is_reversed) {
         index = (l->front + l->occupied_size - 1 - i) % l->capacity;    // THERE MIGHT BE SMTH HERE DIN   
-        
-        // OOB check
-        // "if index is less than the front index and list is not full"
-        if(index < l->front && l->occupied_size != l->capacity) {
-            printf("get index is out of bounds");
-            assert(0 != 0);
-            return -1;
-        }
-
-        //if in bounds
         return l->data[index];
     }
 }
@@ -233,36 +219,22 @@ int64_t get(list *l, int i) {
 /* Sets the element at index i to v provided that 0 <= i < occupied_size. If i is out of bounds, prints an error, fails an assertion, and does nothing.
 O(1) worst-case */
 void set(list *l, int i, int64_t v) {
+    if(i < 0 || i > l->occupied_size) {
+        printf("get index is out of bounds | index: %d | front: %d | occupied size: %d | capacity: %d", i, l->front, l->occupied_size, l->capacity);
+        assert(0 != 0);
+        return -1;
+    }
+
     int index;
 
     if(!l->is_reversed) {
         index = (l->front + i) % l->capacity;
-        
-        // OOB check
-        // if index is greater than rear index and list is not full
-        if(index + 1 > (l->front + l->occupied_size) % l->capacity && l->occupied_size != l->capacity) {
-            printf("set index is out of bounds");
-            assert(0 != 0);
-            return;
-        }
-
-        // if in bounds
         l->data[index] = v;
         return;
     }
 
     if(l->is_reversed) {
         index = (l->front + l->occupied_size - 1 - i) % l->capacity;
-        
-        // OOB check
-        // if index is less than the front index and list is not full
-        if(index < l->front && l->occupied_size != l->capacity) {
-            printf("set index is out of bounds");
-            assert(0 != 0);
-            return;
-        }
-
-        // if in bounds
         l->data[index] = v;
         return;
     }
