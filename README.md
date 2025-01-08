@@ -53,7 +53,7 @@ This brute-force randomness can be used to verify the correctness of the differe
 Having all four implementations in agreeance does not necessarily mean that all four are correct as they can simply be wrong in all the same ways. However, through repeated iterations of brute-force comparison testing, a good level of confidence may be achieved. When combined with the curated edge case test suite, we can be fairly confident that our implementations are correct.
 
 ### Running Unit Tests
-To run tests, execute ./test.sh <name of txt>.
+To run tests, execute ./test.sh [name of txt file].
 The results will be written in the folder "res" and will be overwritten in every excecution of test.sh
 
 The seed for test.py + number of total ops can be changed by the user via the variables in the python file
