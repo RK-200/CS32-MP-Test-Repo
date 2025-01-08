@@ -125,7 +125,23 @@ From the definition of `n_union()`​ we can see that it is possible for `push()
 
 ### 2.4 Amortized analysis via the aggregate method
 
-We also need to show that while the worst case running time of `push()`​ is O(log n), the amortized cost is actually O(1). This will be important in proving that `make()`​ runs in linear time O(n). From the condition of the `merge()`​ function, we can see that merge will happen at most once every 2 pushes. And since at the smallest degree, `merge()`​ of two degree 0 takes 2 operations, one insert and one `merge()`​ can be re
+We also need to show that while the worst case running time of `push()` is O(log n), the amortized cost is actually O(1). This will be important in proving that `make()` runs in linear time O(n). 
+
+`push()`'s worst case occurs when there exists two elements of the same degree. This is because same degree elements must be merged and the `merge()` function take O(log n) time to complete.
+
+However, it can be observed that this worst case happens rather infrequently. From the condition of the `merge()` function, we can see that merge will happen at most once every 2 pushes. In this situation, the function has to merge 2^k elements which takes O(k) or O(log n).
+
+This trend follows when merging elements of higher degrees -- 2 degree merges 2 times, 3 degree merges 3 times
+
+We can see that the ratio of O(1) pushes to O(log n) pushes is lg(n)
+
+Formally, this can be expressed as
+
+Essentially the two cases, O(log n) when we can merge (strictly increasing/decreasing degrees by 1 step), O(1) otherwise. 
+
+It breaks down to 
+cost of n pushes = (O(1) x n) + O(log n) lg(n) times
+which simplifies to O(n), and since there are n operations in this sequence, the cost of each operation ends up being O(1).
 
 ## 2. make(*n*, *seq*)
 
