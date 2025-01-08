@@ -17,7 +17,7 @@ of the new element, and each additional node is built downwards until the bottom
 element are 0 if the list was empty before pushing, the index of the previous element plus 1 for `push_right`, or the index of the next element minus 1 for `push_left`. Lastly, the reversed behaviors of `push_left` and `push_right` instead call the opposite function if the `reversed` field of the list is `true`
 
 
-![Example of the push operation](/images/push_right_example.png)
+![Example of the push operation](images/push_right_example.png)
 
 
 ## 3. make(*n*, *seq*)
