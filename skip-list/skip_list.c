@@ -18,17 +18,17 @@ int generate_random_level(){
 }
 
 // Returns how many elements are in the list
-int size(skip_list *l){
+int size(list *l){
     return l->size;
 }
 
 // Returns if the list if empty or not
-bool empty(skip_list *l){
+bool empty(list *l){
     return (l->size == 0);
 }
 
 // Inserts the input value v to the left of the list with a random number of layers
-void push_left(skip_list *l, int64_t v){
+void push_left(list *l, int64_t v){
     // Reversed behavior instead inserts on the right
     if (l->reversed){
         l->reversed = false;
@@ -84,7 +84,7 @@ void push_left(skip_list *l, int64_t v){
     return;
 }
 
-void push_right(skip_list *l, int64_t v){
+void push_right(list *l, int64_t v){
     // Reversed behavior instead inserts on the right
     if (l->reversed){
         l->reversed = false;
@@ -141,8 +141,8 @@ void push_right(skip_list *l, int64_t v){
 }
 
 // Initializes a new skip list from the given input sequence
-skip_list *make(int n, int64_t *seq){
-    skip_list* l = (skip_list*) malloc(sizeof(skip_list));
+list *make(int n, int64_t *seq){
+    list* l = (list*) malloc(sizeof(list));
     l->size = 0;
     l->height = 0;
     l->heads = calloc(sizeof(node*), MAX_HEIGHT);
@@ -162,7 +162,7 @@ skip_list *make(int n, int64_t *seq){
 }
 
 // Remove the leftmost element from the list; Returns false if the list is empty
-bool pop_left(skip_list *l){
+bool pop_left(list *l){
     if (empty(l)){
         return false;
     }
@@ -205,7 +205,7 @@ bool pop_left(skip_list *l){
 }
 
 // Remove the rightmost element from the list; Returns false if the list is empty
-bool pop_right(skip_list *l){
+bool pop_right(list *l){
     if (empty(l)){
         return false;
     }
@@ -247,7 +247,7 @@ bool pop_right(skip_list *l){
 }
 
 // Returns the value of the leftmost element
-int64_t peek_left(skip_list *l){
+int64_t peek_left(list *l){
     if (empty(l)){
         printf("ERROR: list is empty!");
         assert(0 != 0);
@@ -264,7 +264,7 @@ int64_t peek_left(skip_list *l){
 }
 
 // Returns the value of the leftmost element
-int64_t peek_right(skip_list *l){
+int64_t peek_right(list *l){
     if (empty(l)){
         printf("ERROR: list is empty!");
         assert(0 != 0);
@@ -283,7 +283,7 @@ int64_t peek_right(skip_list *l){
 }
 
 // Returns the topmost node of the element at index i
-node* get_node_at_i(skip_list* l, int i){
+node* get_node_at_i(list* l, int i){
     if (0 <= i && i < l->size){
         node* current = l->heads[l->height];
 
@@ -339,7 +339,7 @@ node* get_node_at_i(skip_list* l, int i){
 }
 
 // Returns the value of the node at index i
-int64_t get(skip_list *l, int i){
+int64_t get(list *l, int i){
     node* node_at_i;
     if (l->reversed){
         // Index counting starts from the right if list is reversed
@@ -359,7 +359,7 @@ int64_t get(skip_list *l, int i){
 }
 
 // Sets the value of all nodes at index i to v
-void set(skip_list *l, int i, int64_t v){
+void set(list *l, int i, int64_t v){
     node* node_at_i = NULL;
     if (l->reversed){
         node_at_i = get_node_at_i(l, l->size - i - 1);
@@ -383,12 +383,12 @@ void set(skip_list *l, int i, int64_t v){
 }
 
 // Reverses the list
-void reverse(skip_list *l){
+void reverse(list *l){
     l->reversed = !l->reversed;
 }
 
 // For debugging (doesn't print in reversed btw)
-void print_list(skip_list* l){
+void print_list(list* l){
     if (empty(l)){
         printf("list is empty\n");
         return;
@@ -424,7 +424,7 @@ int main(void){
         arr[i] = i;
     }
 
-    skip_list* l = make(n, arr);
+    list* l = make(n, arr);
     print_list(l);
     assert(peek_left(l) == 0);
     pop_left(l);
@@ -511,7 +511,7 @@ int main(void){
     print_list(l);
 
     int64_t q[] = {1};
-    skip_list* a = make(0, q);
+    list* a = make(0, q);
     for (int i = 0; i < 10; i++){
         push_left(a, i);
     }
