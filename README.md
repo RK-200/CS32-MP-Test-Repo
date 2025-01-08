@@ -5,7 +5,7 @@ This repo contains four different implementations of a dynamic list along with s
 
 The four implementation folders are identical in structure, containing source code written in c and assisted by header files, a `DETAILS.md` file dicussing the implementation details of each dynamic list strategy, and a `PROOFS.md` file justifying the time complexities of their respective implementations.
 
-The fifth folder contains unit testing shit idfk what its gonna contain honestly AHAHHAHAHAHAHAHAHHA
+**The fifth folder contains unit testing shit idfk what its gonna contain honestly AHAHHAHAHAHAHAHAHHA**
 
 These folders, with the exception of the `unit-tests` folder are standalone and the programs within them make no reference to files of other implementations.
 
@@ -44,11 +44,37 @@ Each operation runs in O(1) time, excluding the `get` and `set` operations, whic
 ### Sequence of trees
 
 ## Unit Test System
-Our unit testing suite thoroughly tests the various list implementations by covering a wide range of edge cases and scenarios. The suite includes several test files, each targeting different scenarios for the lists. These tests encompass operations on empty or zero-sized lists, the creation of multiple lists with varying inputs, and the verification of list properties after each operation. Additionally, the suite can generate large random sequences of list operations to test the capabilities of the implementations under different conditions. These tests ensure that all edge cases and possible scenarios are thoroughly examined.
+Our unit testing suite thoroughly tests the various list implementations by covering a wide range of edge cases and scenarios. The suite includes several test files, each targeting different scenarios for the lists. These tests encompass operations on empty or zero-sized lists, the creation of multiple lists with varying inputs, and the verification of implementation-specific list properties after each operation. 
+
+Additionally, the suite can generate large sequences sequences of random list operations to test the capabilities of the implementations through brute-force. While these tests do not target particular edge cases, they do run a massive quantity of commands (around 1.5 million lines).
+
+This brute-force randomness can be used to verify the correctness of the different implementations by feeding the same randomly generated set of commands for all four implementations and comparing their outputs to find discrepancies. If at least one of the implementations' outputs are different, then at least one of the implementations is likely wrong. 
+
+Having all four implementations in agreeance does not necessarily mean that all four are correct as they can simply be wrong in all the same ways. However, through repeated iterations of brute-force comparison testing, a good level of confidence may be achieved. When combined with the curated edge case test suite, we can be fairly confident that our implementations are correct.
+
 ### Running Unit Tests
-The seed for test.py + number of total ops can be changed by the user 
+<insert how to run the brute force tests>
+
+The seed for test.py + number of total ops can be changed by the user via **IS IT A BASH THING OR DO THEY JUST GO INTO THE THE PYTHON FILE**
+
 ### Adding More Unit Tests
-go jelo woo
+| Function  | Associated letter command |
+| ------------- | ------------- |
+| `make()`  | omitted |
+| `push_left()`  | a |
+| `push_right()`  | b |
+| `pop_left()`  | c |
+| `pop_right()`  | d |
+| `peek_left()`  | e |
+| `peek_right()`  | f |
+| `size()`  | g |
+| `empty()`  | h |
+| `get()`  | i |
+| `set()`  | j |
+| `reverse()`  | k |
+| `print_list()` | l |
+
+go guys woo
 
 ## References
 Chumbley, A., Williams, C., Branco, J., Khim, J., & Ross, E. (n.d.). *Skip list*. Brilliant. https://brilliant.org/wiki/skip-lists/ 
