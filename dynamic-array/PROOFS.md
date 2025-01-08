@@ -19,11 +19,9 @@ This file is a compilation of brief proofs for the asymptotic behaviour of our d
 | `set()`  | O(1) worst-case |
 | `reverse()`  | O(1) worst-case |
 
-Additionally, this dynamic array implementation is expected to have a **worst-case memory complexity of O(n)**
+It can be observed that all functions, aside from the `make()` function, take constant time to execute. Additionally, this dynamic array implementation is expected to have a **worst-case memory complexity of O(n)**
 
-<insert general outline here>
-
-It is important to keep in mind while perusing these proofs that the constant time `reverse()` is achieved by writing a regular and reversed implementation for most of the functions. This means that there will be at least two cases for most of the proofs in this file.
+Furthermore, it is important to keep in mind while perusing these proofs that the constant time `reverse()` is achieved by writing a regular and reversed implementation for most of the functions. This means that there will be at least two cases for most of the proofs in this file.
 
 Lastly, we will be analyzing similar functions in pairs or groups to keep the proofs concise.
 
@@ -37,13 +35,13 @@ for(int i = 0; i < n; i++) {
 }
 ```
 
-Since the loop iterates through the entirety of the array `seq`, we can conclude that it runs in O(*l*) time if *l* is the length of the `seq` array.
+Since the loop iterates through the entirety of the array `seq`, we can conclude that it runs in O(*l*) time; *l* being the length of the `seq` array.
 
 ## 2 push_left(*l*, *v*), push_right(*l*, *v*)
 
 The first of the logical pairs are the `push_left()` and `push_right()` functions.
 
-They have similar implementations which are each divided into three cases: a regular case, a reversed case, and a full list case. Due to the analogous nature of their implementations, we will use `push()` to refer to both `push_left()` and `push_right()` in this proof.
+They have similar implementations which are each divided into three cases: a regular case, a reversed case, and a full list case. Due to the analogous nature of their implementations, we will use `push()` to refer to both `push_left()` and `push_right()` in this proof. We will be using `push_left()`'s implementation as an example.
 
 ### 2.1 The regular case
 The regular (non-reversed) logic simply moves the front index one space to the left and inserts v at that index.
