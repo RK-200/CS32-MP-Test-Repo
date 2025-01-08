@@ -16,7 +16,7 @@ int main(){
     char control = 'a';
     int64_t val = 0;
     int idx = 0;
-    int64_t arr[1] = {0}; //TODO: make this editable in bash
+    int64_t arr[1] = {0};
     list* test = make(1,arr);
 
     while (control != 'n'){
@@ -77,11 +77,6 @@ int main(){
 
     }
 }
-
-    int64_t t[3] = {1,2,3};
-    list* b = make(3,t);
-    reverse(b);
-    print_list(b);
 
     return 0;
 }
