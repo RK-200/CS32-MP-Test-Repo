@@ -5,7 +5,7 @@ This repo contains four different implementations of a dynamic list along with s
 
 The four implementation folders are identical in structure, containing source code written in c and assisted by header files, a `DETAILS.md` file dicussing the implementation details of each dynamic list strategy, and a `PROOFS.md` file justifying the time complexities of their respective implementations.
 
-**The fifth folder contains unit testing shit idfk what its gonna contain honestly AHAHHAHAHAHAHAHAHHA**
+The unit-tests folder contains tools and written unit tests in order to verify the functionality and correctness of the written code.
 
 These folders, with the exception of the `unit-tests` folder are standalone and the programs within them make no reference to files of other implementations.
 
@@ -53,9 +53,10 @@ This brute-force randomness can be used to verify the correctness of the differe
 Having all four implementations in agreeance does not necessarily mean that all four are correct as they can simply be wrong in all the same ways. However, through repeated iterations of brute-force comparison testing, a good level of confidence may be achieved. When combined with the curated edge case test suite, we can be fairly confident that our implementations are correct.
 
 ### Running Unit Tests
-<insert how to run the brute force tests>
+To run tests, execute ./test.sh <name of txt>.
+The results will be written in the folder "res" and will be overwritten in every excecution of test.sh
 
-The seed for test.py + number of total ops can be changed by the user via **IS IT A BASH THING OR DO THEY JUST GO INTO THE THE PYTHON FILE**
+The seed for test.py + number of total ops can be changed by the user via the variables in the python file
 
 ### Adding More Unit Tests
 | Function  | Associated letter command |
