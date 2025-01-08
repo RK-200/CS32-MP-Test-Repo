@@ -35,6 +35,12 @@ These functions are triggered whenever the `list`'s size goes beyond the capacit
 Aside from those functions, the rest of the implementation, defined in the `dynamic_array.c` file, simply leverages O(1) indexing to implement dynamic list functions in an efficient manner.
 
 ### Skip list
+The skip list is a probabilistic data structure which uses multiple doubly-linked lists as 'layers' to provide logarithmic expected running time for indexing operations.
+
+The defining trait of this approach is the use of probability to randomly promote elements to different layers in the list, which evenly distributes each element at random heights in the list. This creates 'express lanes', as each layer has more elements than the one below it, and traversing this express lane skips elements from the layers below it, allowing for more efficient get and set operations.
+
+Each operation runs in O(1) time, excluding the `get` and `set` operations, which run in O($\log n$) time. The `list` and `node` structs are defined in the `skip_list.h` and `skip_list_node.h` header files. Additionally, the constants `SEED`, `P`, and `MAX_HEIGHT` are defined in the `skip_list.c` file and can be modified by the user.
+
 ### Sequence of trees
 
 ## Unit Test System
