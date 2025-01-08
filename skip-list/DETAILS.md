@@ -60,7 +60,7 @@ For example, searching for the node at index 3:
 ![Example of the search operation](images/search_example.png)
 
 
-After searching for the node, `get` returns the `value` field of the returned node, while `set` changes the `value` field of the node to the input *v* and moves to the node below it to repeat the previous step until all nodes of the element are changed to the new value. The reversed behaviors of `get` and `set` instead adjust the index to the size of the list - i - 1, to simulate starting the indexing from the tail end instead.
+After searching for the node, `get` returns the `value` field of the returned node, while `set` changes the `value` field of the node to the input *v* and moves to the node below it to repeat the previous step until all nodes of the element are changed to the new value. The reversed behaviors of `get` and `set` instead adjust the index to the size of the *list - i - 1*, to simulate starting the indexing from the tail end instead.
 
 ## 7. reverse(*l*)
 Calling `reverse` on the input list *l* sets the `reversed` field of *l* to the opposite value. Instead of reversing the pointers of each node, only the behaviors of each of the previous functions will be reversed, so the list will behave as if it was actually reversed. 
