@@ -11,13 +11,12 @@ void print_list(list* l){
     printf("%lld]\n",get(l,l->size-1));
 }
 
-
 int main(){
     char control = 'a';
     int64_t val = 0;
     int idx = 0;
     int64_t arr[1] = {0}; //TODO: make this editable in bash
-    list* test = make(1,arr);
+    list* test = make(0,arr);
 
     while (control != 'n'){
     scanf("%c",&control);
@@ -71,6 +70,18 @@ int main(){
         reverse(test);
         break;
 
+        case 'l':
+        print_list(test);
+        break;
+
+        case 'm':
+        printf("%d\n",test->height);
+        break;
+
+        case 'o': // get level of element at i
+        scanf("%d",&idx);
+        printf("%d", get_node_at_i(test, &idx)->level);
+        break;
     }
 }
 
