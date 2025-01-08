@@ -38,8 +38,9 @@ Aside from those functions, the rest of the implementation, defined in the `dyna
 ### Sequence of trees
 
 ## Unit Test System
-Our unit testing suite thoroughly tests the various list implementations by covering a wide range of edge cases and scenarios. The suite includes several test files, each targeting different scenarios for the lists. These tests encompass operations on empty or zero-sized lists, the creation of multiple lists with varying inputs, and the verification of list properties after each operation. Additionally, the suite can generate large random sequences of list operations to test the capabilities of the implementations under dofferent conditions. These tests ensure that all edge cases and possible scenarios are thoroughly examined.
+Our unit testing suite thoroughly tests the various list implementations by covering a wide range of edge cases and scenarios. The suite includes several test files, each targeting different scenarios for the lists. These tests encompass operations on empty or zero-sized lists, the creation of multiple lists with varying inputs, and the verification of list properties after each operation. Additionally, the suite can generate large random sequences of list operations to test the capabilities of the implementations under different conditions. These tests ensure that all edge cases and possible scenarios are thoroughly examined.
 ### Running Unit Tests
+The seed for test.py + number of total ops can be changed by the user 
 ### Adding More Unit Tests
 go jelo woo
 
