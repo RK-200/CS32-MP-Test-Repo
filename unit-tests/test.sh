@@ -1,37 +1,46 @@
 #!/bin/bash
 
-
 name=main.c
 dll=../doubly-linked-list/$name 
 da=../dynamic-array/$name 
 st=../seq-of-trees/$name 
 sl=../skip-list/$name 
-py=/test.py
 
 
-declare -a names=("stree" "sl" "dll")
+declare -a names=("doubly_linked_list" "dynamic_array" "skip_list" "sequence_of_trees")
 
-declare -a arr=( $st $sl $dll )
+declare -a arr=( $dll $da $sl $st )
 
-name_py=main.py
 
 tc=$1
 testfile=$tc.txt
 
-gcc -o ./tmp/test $dll
-./tmp/test < $testfile > ./tmp/out.a
 
-for i in $(seq 0 2)
+
+for i in $(seq 0 3)
+do
+printf "" > ./res/${names[$i]}.txt
+for j in $(seq 0 3)
 do
 echo ${names[$i]}
-gcc -o ./tmp/test2${names[$i]} ${arr[$i]}
-./tmp/test2${names[$i]} < $testfile > ./tmp/out.b
+gcc -o ./tmp/test${names[$i]} ${arr[$i]}
+./tmp/test${names[$i]} < $testfile > ./tmp/out.a
+if [$i == $j]; then
+:
+else
+
+gcc -o ./tmp/test2${names[$j]} ${arr[$j]}
+./tmp/test2${names[$j]} < $testfile > ./tmp/out.b
 
 if diff ./tmp/out.b ./tmp/out.a; then
-echo "Output correct"
+printf "Output correct: ${names[$j]}\n" >> ./res/${names[$i]}.txt
 else
-echo "Output incorrect!"
+printf "Output incorrect!: ${names[$j]}\n" >> ./res/${names[$i]}.txt
 fi
+
+fi
+
+done
 
 done
 
