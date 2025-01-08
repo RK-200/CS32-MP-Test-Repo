@@ -3,7 +3,7 @@
 ## User Manual
 This repo contains four different implementations of a dynamic list along with suitable unit tests for each of them. Our code is organized into five folders. 
 
-The four implementation folders are identical in structure, containing source code written in c and assisted by header files, a *DETAILS.md* file dicussing the implementation details of each dynamic list strategy, and a *PROOFS.md* file justifying the time complexities of their respective implementations.
+The four implementation folders are identical in structure, containing source code written in c and assisted by header files, a `DETAILS.md` file dicussing the implementation details of each dynamic list strategy, and a `PROOFS.md` file justifying the time complexities of their respective implementations.
 
 The fifth folder contains unit testing shit idfk what its gonna contain honestly AHAHHAHAHAHAHAHAHHA
 
