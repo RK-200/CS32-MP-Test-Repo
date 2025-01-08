@@ -12,13 +12,16 @@ declare -a arr=( $st )
 
 name_py=main.py
 
+tc=$1
+
+
 gcc -o ./tmp/test $dll
-./test < test.txt > ./tmp/out.a
+./test < $tc.txt > ./tmp/out.a
 
 for i in "${arr[*]}"
 do
 gcc -o ./tmp/test2 $i
-./test2 < test.txt > ./tmp/out.b
+./test2 < $tc.txt > ./tmp/out.b
 diff ./tmp/out.b ./tmp/out.a
 done
 
