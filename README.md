@@ -38,6 +38,14 @@ Aside from those functions, the rest of the implementation, defined in the `dyna
 ### Sequence of trees
 
 ## Unit Test System
+Our unit testing suite thoroughly tests the various list implementations by covering a wide range of edge cases and scenarios. The suite includes several test files, each targeting different scenarios for the lists. These tests encompass operations on empty or zero-sized lists, the creation of multiple lists with varying inputs, and the verification of list properties after each operation. Additionally, the suite can generate large random sequences of list operations to test the capabilities of the implementations under different conditions. These tests ensure that all edge cases and possible scenarios are thoroughly examined.
+### Running Unit Tests
+The seed for test.py + number of total ops can be changed by the user 
+### Adding More Unit Tests
 go jelo woo
 
-## resources ig lmao
+## References
+Chumbley, A., Williams, C., Branco, J., Khim, J., & Ross, E. (n.d.). *Skip list*. Brilliant. https://brilliant.org/wiki/skip-lists/ 
+
+
+Wikipedia contributors. (2024, December 30). *Skip list*. Wikipedia, The Free Encyclopedia. Retrieved 09:01, January 3, 2025, from https://en.wikipedia.org/w/index.php?title=Skip_list&oldid=1266213396
