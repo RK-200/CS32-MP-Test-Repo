@@ -34,7 +34,7 @@ for _ in range(CASES):
         case _:
             break
 f.write("n\n")
-f.close
+f.close()
             
     
     
