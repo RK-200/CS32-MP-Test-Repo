@@ -217,6 +217,32 @@ void reverse(list *l) {
 ## 6. get(*l*, *i*) and set(*l*, *i*, *v*)
 Both `get()` and `set()` perform an indexing operation along with some out-of-bounds checks. Without any loops or other size-dependent operations, we can conclude that both functons have a worst-case running time of O(1).
 
+```c
+/* Sets the element at index i to v provided that 0 <= i < occupied_size. If i is out of bounds, prints an error, fails an assertion, and does nothing.
+O(1) worst-case */
+void set(list *l, int i, int64_t v) {
+    if(i < 0 || i > l->occupied_size) {
+        printf("get index is out of bounds | index: %d | front: %d | occupied size: %d | capacity: %d", i, l->front, l->occupied_size, l->capacity);
+        assert(0 != 0);
+        return -1;
+    }
+
+    int index;
+
+    if(!l->is_reversed) {
+        index = (l->front + i) % l->capacity;
+        l->data[index] = v;
+        return;
+    }
+
+    if(l->is_reversed) {
+        index = (l->front + l->occupied_size - 1 - i) % l->capacity;
+        l->data[index] = v;
+        return;
+    }
+}
+```
+
 ## 7. Expected Space Complexity
 Since the backing dynamic array doubles and halves in size when the array goes above full and below 1/3 capacity respectively, then the space occupied by an array of n elements, $`s(n)`$ can be expressed as follows:
 
