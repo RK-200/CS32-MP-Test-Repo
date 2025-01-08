@@ -51,7 +51,6 @@ list *make(int n, int64_t *seq){
     return ret;
 }
 
-
 void merge(list* l,char start){
     if(start == 'l'){
         if(l->size > 1){
@@ -122,6 +121,59 @@ void push_left(list *l, int64_t v){
     l->nodes++;
     merge(l,'l');
 }
+
+void split(list *l, char start){
+    if(start == 'l'){
+        while(l->left_head->degree > 0){
+            //split
+            if(l->size == 1){
+                node* lh= l->left_head;
+                l->left_head = lh->left_child;
+                l->right_head = lh->right_child;
+                l->left_head->right = l->right_head;
+                l->right_head->left = l->left_head;
+                l->left_head->left = NULL;
+                l->right_head->right= NULL;
+            }
+            else{
+                node* lh= l->left_head;
+                l->left_head = lh->left_child;
+                l->left_head->left = NULL;
+                l->left_head->right = lh->right_child;
+                l->left_head->right->left = l->left_head;
+                l->left_head->right->right = lh->right;
+                lh->right->left = l->left_head->right;
+    
+            }
+            l->size++;
+        }
+    }else{
+        while(l->right_head->degree != 0){
+            //split
+            if(l->size == 1){
+                node* lh= l->right_head;
+                l->right_head = lh->right_child;
+                l->left_head = lh->left_child;
+                l->right_head->left = l->left_head;
+                l->left_head->right = l->right_head;
+                l->left_head->left = NULL;
+                l->right_head->right= NULL;
+            }
+            else{
+                node* lh= l->right_head;
+                l->right_head = lh->right_child;
+                l->right_head->right = NULL;
+                l->right_head->left = lh->left_child;
+                l->right_head->left->right = l->right_head;
+                l->right_head->left->left = lh->left;
+                lh->left->right = l->right_head->left;
+    
+            }
+            l->size++;
+        }
+    }
+}
+
 void push_right(list *l, int64_t v){
     if(l->reverse){
         l->reverse = false;
@@ -161,29 +213,8 @@ int64_t pop_left(list *l){
     }
     l->nodes--;
     
-    while(l->left_head->degree > 0){
-        //split
-        if(l->size == 1){
-            node* lh= l->left_head;
-            l->left_head = lh->left_child;
-            l->right_head = lh->right_child;
-            l->left_head->right = l->right_head;
-            l->right_head->left = l->left_head;
-            l->left_head->left = NULL;
-            l->right_head->right= NULL;
-        }
-        else{
-            node* lh= l->left_head;
-            l->left_head = lh->left_child;
-            l->left_head->left = NULL;
-            l->left_head->right = lh->right_child;
-            l->left_head->right->left = l->left_head;
-            l->left_head->right->right = lh->right;
-            lh->right->left = l->left_head->right;
+    split(l,'l');
 
-        }
-        l->size++;
-    }
     l->size--;
     
     node* tmp = l->left_head;
@@ -220,29 +251,8 @@ int64_t pop_right(list *l){
     }
     l->nodes--;
     
-    while(l->right_head->degree != 0){
-        //split
-        if(l->size == 1){
-            node* lh= l->right_head;
-            l->right_head = lh->right_child;
-            l->left_head = lh->left_child;
-            l->right_head->left = l->left_head;
-            l->left_head->right = l->right_head;
-            l->left_head->left = NULL;
-            l->right_head->right= NULL;
-        }
-        else{
-            node* lh= l->right_head;
-            l->right_head = lh->right_child;
-            l->right_head->right = NULL;
-            l->right_head->left = lh->left_child;
-            l->right_head->left->right = l->right_head;
-            l->right_head->left->left = lh->left;
-            lh->left->right = l->right_head->left;
-
-        }
-        l->size++;
-    }
+    split(l,'r');
+    
     l->size--;
     
     node* tmp = l->right_head;
@@ -282,15 +292,14 @@ int64_t peek_right(list *l){
     return l->rightmost;
 }
 int size(list *l){
-    return l->size;
+    return l->nodes;
 }
 bool empty(list *l){
-    if(l->size==0){
-        return true;
-    }
-    return false;
+    return (l->nodes == 0) ? true : false;
 }
-
+void reverse(list *l){
+    l->reverse ^= true;
+}
 node* traverse(list *l,int i){
     int64_t s = -1,res;
     node* n = l->left_head;
@@ -343,8 +352,6 @@ void set(list *l, int i, int64_t v){
     node* ret = traverse(l,i);
     ret->val = v;
 }
-void reverse(list *l){
-    l->reverse ^= true;
-}
+
 
 
