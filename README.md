@@ -75,7 +75,7 @@ The seed for test.py + number of total ops can be changed by the user via the va
 | `reverse()`  | k |
 | `print_list()` | l |
 
-go guys woo
+Unit tests can be written in a .txt file where specific characters excecute certain functions. Some of the functions such as push_left() also expect an integer to be placed in the next line of the text file as input. With this, it is possible to create unit tests that can interface with almost the complete functionality of the program.
 
 ## References
 Chumbley, A., Williams, C., Branco, J., Khim, J., & Ross, E. (n.d.). *Skip list*. Brilliant. https://brilliant.org/wiki/skip-lists/ 
