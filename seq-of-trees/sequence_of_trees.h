@@ -18,8 +18,8 @@ typedef struct list {
 list *make(int n, int64_t *seq);
 void push_left(list *l, int64_t v);
 void push_right(list *l, int64_t v);
-int64_t pop_left(list *l);
-int64_t pop_right(list *l);
+bool pop_left(list *l);
+bool pop_right(list *l);
 int64_t peek_left(list *l);
 int64_t peek_right(list *l);
 int size(list *l);

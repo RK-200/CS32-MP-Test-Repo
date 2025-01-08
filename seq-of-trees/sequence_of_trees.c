@@ -199,11 +199,11 @@ void push_right(list *l, int64_t v){
     l->nodes++;
     merge(l,'r');
 }
-int64_t pop_left(list *l){
+bool pop_left(list *l){
     int64_t ret =0;
     if (l->size == 0){
         printf("Array Index error");
-        return ret;
+        return false;
     }
     if(l->reverse){
         l->reverse = false;
@@ -235,13 +235,13 @@ int64_t pop_left(list *l){
     else{l->left_head=l->right_head;l->right_head = l->left_head;}
     
     l->leftmost = get(l,0);
-    return ret;
+    return true;
 }
-int64_t pop_right(list *l){ 
+bool pop_right(list *l){ 
     int64_t ret =0;
     if (l->size == 0){
         printf("Array Index error");
-        return ret;
+        return false;
     }
     if(l->reverse){
         l->reverse = false;
@@ -273,7 +273,7 @@ int64_t pop_right(list *l){
     else{l->right_head=l->left_head;l->left_head = l->right_head;}
     
     l->rightmost = get(l,l->nodes-1);
-    return ret;
+    return true;
 }
 int64_t peek_left(list *l){
     if(l->size == 0 ){
