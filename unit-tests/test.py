@@ -29,7 +29,7 @@ for _ in range(CASES):
                 f.write(f"{c}\n")
                 f.write(f"{random.randint(0, size-1)}\n")
                 f.write(f"{random.randint(-2**63, 2**63 - 1)}\n")
-        case 'g' | 'h' | 'k' | 'i':
+        case 'g' | 'h' | 'k' | 'l':
             f.write(f"{c}\n")
         case _:
             break
