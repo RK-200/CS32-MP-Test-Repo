@@ -4,7 +4,7 @@ The skip list implementation works essentially like multiple "layers" of doubly-
 the number of layers each element has a corresponding node in is determined randomly, with a 50% chance for another node containing that element to be added to another layer, excluding the bottommost layer 0, where all elements can be found.
 
 
-![Example of a skip list](/images/skip_list_example.png)
+![Example of a skip list](images/skip_list_example.png)
 
 
 Each `node` in the skip list has three pointers: next, prev, and below, each of which points to the node after, before, and under it, respectively, or to NULL if it does not exist. Additionally, the `skip_list` struct contains two `node*` arrays:
@@ -57,7 +57,7 @@ returns the topmost node of the element at *i*. This function gets the required 
 For example, searching for the node at index 3:
 
 
-![Example of the search operation](/images/search_example.png)
+![Example of the search operation](images/search_example.png)
 
 
 After searching for the node, `get` returns the `value` field of the returned node, while `set` changes the `value` field of the node to the input *v* and moves to the node below it to repeat the previous step until all nodes of the element are changed to the new value. The reversed behaviors of `get` and `set` instead adjust the index to the size of the list - i - 1, to simulate starting the indexing from the tail end instead.
